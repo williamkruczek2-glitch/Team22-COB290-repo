@@ -13,6 +13,9 @@
     return;
   }
 
+
+
+  
   api.getProjectDetail(id).then(render).catch(function (err) { ui.showError(main, err); });
 
   function render(p) {
