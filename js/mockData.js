@@ -7,6 +7,9 @@
  * Dates are generated relative to "today" so the demo always looks current.
  * A seeded random generator keeps the data identical on every page load.
  */
+
+
+
 var MIA = window.MIA || {};
 
 (function () {
