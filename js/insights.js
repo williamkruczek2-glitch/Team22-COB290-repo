@@ -8,6 +8,9 @@
  * R10: every figure is about teams, projects or skill areas, never a named
  * person, and groups smaller than MIA.config.MIN_GROUP are withheld.
  */
+
+
+
 (function (api, ui, charts, session, cfg) {
   ui.renderNav('insights');
   var root = document.getElementById('insights');
