@@ -26,7 +26,9 @@ class ToDoWindow(PQ.QMainWindow):
         self.textBox = PQ.QLineEdit(self)
         layout.addWidget(self.textBox)
 
-
+        # creates a input for dates
+        self.dateInput = PQ.QDateEdit(self)
+        layout.addWidget(self.dateInput)
 
         # creates a button
         self.button = PQ.QPushButton("Add Task")
@@ -38,8 +40,12 @@ class ToDoWindow(PQ.QMainWindow):
 
 
     def addTask(self):
+        # stores the text from the text box in a variable
         title = self.textBox.text()
-        backend.add_item(title, "2026-10-30", "1234")
+        # stores the date from the date input in a variable
+        date = self.dateInput.date()
+        # the backend functions are utilised via the UI
+        backend.add_item(title, date.toString("yyyy-MM-dd"), "1234")
 
 
 # opens window on run
