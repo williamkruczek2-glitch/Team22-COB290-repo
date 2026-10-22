@@ -17,10 +17,16 @@ class ToDoWindow(PQ.QMainWindow):
         layout = PQ.QVBoxLayout()
         container.setLayout(layout)
 
-        # creates text object
+        # creates display text
         self.label = PQ.QLabel("To Do List", self)
         # displays text on the screen
         layout.addWidget(self.label)
+
+        # creates a text box
+        self.textBox = PQ.QLineEdit(self)
+        layout.addWidget(self.textBox)
+
+
 
         # creates a button
         self.button = PQ.QPushButton("Add Task")
@@ -32,7 +38,8 @@ class ToDoWindow(PQ.QMainWindow):
 
 
     def addTask(self):
-        backend.add_item("Random Task", "2026-10-30", "1234")
+        title = self.textBox.text()
+        backend.add_item(title, "2026-10-30", "1234")
 
 
 # opens window on run

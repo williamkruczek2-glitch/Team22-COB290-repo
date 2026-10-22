@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "projectId": "35fee640-09c7-4a73-81c3-13008e719a0f",
+        "title": "Some Task",
+        "dueDate": "2026-10-30",
+        "status": "todo",
+        "assigneeId": "1234"
+    }
+]
