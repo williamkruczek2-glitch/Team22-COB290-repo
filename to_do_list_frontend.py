@@ -17,8 +17,14 @@ class ToDoWindow(PQ.QMainWindow):
         layout = PQ.QVBoxLayout()
         container.setLayout(layout)
 
+        #Fetches the tasks from the backend
+        taskArr = backend.view_items()
+        taskStr = ""
+        # converts array of tasks into a string
+        for task in taskArr:
+            taskStr += str(task["title"]) + " | " + str(task["dueDate"]) + " | " + str(task["status"])+ "\n"
         # creates display text
-        self.label = PQ.QLabel("To Do List", self)
+        self.label = PQ.QLabel(taskStr, self)
         # displays text on the screen
         layout.addWidget(self.label)
 
