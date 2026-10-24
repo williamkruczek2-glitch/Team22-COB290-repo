@@ -13,7 +13,16 @@ class ListOfTasks(PQ.QWidget):
 
         # creates a button so that the user can add tasks
         add_task_button = PQ.QPushButton("Add Task")
-        
+
+        # this splits the heading and Add Task button up from the actual tasks
+        header_layout = PQ.QHBoxLayout()
+        # add heading and Add Task button to the header
+        header_layout.addWidget(page_heading)
+        header_layout.addWidget(add_task_button)
+
+        task_list_layout = PQ.QVBoxLayout()
+        task_list_layout.setSpacing(10)
+
 
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
