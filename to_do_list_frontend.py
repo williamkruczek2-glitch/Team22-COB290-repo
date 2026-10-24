@@ -2,6 +2,20 @@ import PySide6.QtWidgets as PQ
 import to_do_list_backend as backend
 
 
+
+# This is the class which represents the list of tasks
+class ListOfTasks(PQ.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        # creates a heading object
+        page_heading = PQ.QLabel("My To Do List")
+
+        # creates a button so that the user can add tasks
+        add_task_button = PQ.QPushButton("Add Task")
+        
+
+# This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
     # initialisation
     def __init__(self):
@@ -39,7 +53,17 @@ class ToDoWindow(PQ.QMainWindow):
         self.setLayout(layout)
 
 
-    def addTask(self):
+    def taskView(self):
+            # stores the text from the text box in a variable
+            title = self.textBox.text()
+            # stores the date from the date input in a variable
+            date = self.dateInput.date()
+            # the backend functions are utilised via the UI
+            backend.add_item(title, date.toString("yyyy-MM-dd"), "1234")
+            # dynamically updates the text on the screen when a new task is added
+            self.label.setText(self.viewTasks())
+
+    '''def addTask(self):
         # stores the text from the text box in a variable
         title = self.textBox.text()
         # stores the date from the date input in a variable
@@ -47,7 +71,7 @@ class ToDoWindow(PQ.QMainWindow):
         # the backend functions are utilised via the UI
         backend.add_item(title, date.toString("yyyy-MM-dd"), "1234")
         # dynamically updates the text on the screen when a new task is added
-        self.label.setText(self.viewTasks())
+        self.label.setText(self.viewTasks())'''
 
     def viewTasks(self):
         # fetches the tasks from the backend
