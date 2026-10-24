@@ -24,7 +24,7 @@ class InsightsPage(ui.Page):
         # --- page header (insights.html) ---
         self.main.addWidget(ui.label('Insights', 'h1'))
         self.main.addWidget(ui.label('How work is spread, how projects are going, whether teams have enough people, '
-                                     'and where training would help. Figures cover teams, projects and skill areas, '
+                                     'and where delays and issues cluster. Figures cover teams, projects and skill areas, '
                                      'never named individuals.', 'lede'))
         self.teamSel = QComboBox()
         self.filters = QWidget()
@@ -155,29 +155,28 @@ class InsightsPage(ui.Page):
 
     # ---------- 4. Training ----------
     def trainingLead(self, ts):
-        flagged = [t for t in ts if t.get('level') == 'critical']
-        if not flagged:
-            return 'No skill area stands out as needing training right now.'
-        return ('Training suggested for ' + ui.listText([t['area'] for t in flagged]) +
-                f": more than {round(cfg['TRAINING_FLAG'] * 100)}% of tasks there finished late, were reopened or are overdue.")
+        visible = sorted([t for t in ts if not t['suppressed']], key=lambda t: t['issueRate'], reverse=True)
+        if not visible or visible[0]['issueRate'] == 0:
+            return 'No late, reopened or overdue tasks in any skill area shown.'
+        top = [t for t in visible[:2] if t['issueRate'] > 0]
+        return ('Most delays and issues: ' + ui.listText([f"{t['area']} ({t['issueRate']}%)" for t in top]) +
+                '. Use this alongside your knowledge of the team when deciding on training.')
 
     def drawTraining(self, el, ts):
-        labels = {'good': 'No action', 'warning': 'Keep an eye on', 'critical': 'Training suggested'}
-        visible = [t for t in ts if not t['suppressed']]
+        visible = sorted([t for t in ts if not t['suppressed']], key=lambda t: t['issueRate'], reverse=True)
         hidden = [t for t in ts if t['suppressed']]
         charts.hbars(el, [{
             'label': t['area'], 'value': t['issueRate'], 'display': f"{t['issueRate']}%",
-            'extra': ui.levelPill(t['level'], labels[t['level']]),
             'tip': f"<strong>{ui.esc(t['area'])}</strong><br>{t['tasks']} tasks, {t['people']} people<br>"
                    f"{t['late']} finished late, {t['reopened']} reopened, {t['overdue']} overdue now",
         } for t in visible], {
             'max': 100,
-            'ref': {'value': cfg['TRAINING_FLAG'] * 100,
-                    'label': f"Line = {round(cfg['TRAINING_FLAG'] * 100)}%, the point where training is suggested."},
             'table': {'headers': ['Skill area', 'Tasks', 'Finished late', 'Reopened', 'Overdue', 'Issue rate'],
                       'rows': [[t['area'], t['tasks'], t['late'], t['reopened'], t['overdue'], f"{t['issueRate']}%"]
                                for t in visible]},
         })
+        el.addWidget(ui.label('Issue rate = share of tasks in that area that finished late, were reopened '
+                              'or are overdue now.', 'small'))
         if hidden:
             el.addWidget(ui.label('Not shown: ' + ', '.join(t['area'] for t in hidden) +
                                   f". Fewer than {cfg['MIN_GROUP']} people worked on it, so the figure could identify someone.",
