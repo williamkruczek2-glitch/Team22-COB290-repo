@@ -20,8 +20,18 @@ class ListOfTasks(PQ.QWidget):
         header_layout.addWidget(page_heading)
         header_layout.addWidget(add_task_button)
 
+        # creates a layout for the list of tasks
         task_list_layout = PQ.QVBoxLayout()
         task_list_layout.setSpacing(10)
+
+        # encapsulates the tasks in a container which is easier to deal with
+        container = PQ.QWidget()
+        container.setLayout(task_list_layout)
+
+        # makes it so that the list is scrollable
+        scroll = PQ.QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(container)
 
 
 # This is the root class which is like a container for the different pages of the app
