@@ -1,6 +1,6 @@
 """
 project.py - R02 drill-down: one project in detail.   [was js/project.js + project.html]
-Burn-up (planned vs completed), task status breakdown, overdue and
+Burn-up (planned vs completed hours), task status breakdown, overdue and
 upcoming tasks. Reached from the dashboard via ui.go('project', id='P1').
 """
 from PySide6.QtCore import Qt, QRectF
@@ -63,7 +63,7 @@ class ProjectPage(ui.Page):
         # facts
         facts = QHBoxLayout()
         facts.setSpacing(16)
-        for k, v in [('Done', f"{p['progress']['actual']}%"),
+        for k, v in [('Done', f"{p['progress']['actual']}% ({p['hours']['done']:g} of {p['hours']['total']:g} h)"),
                      ('Planned by today', f"{p['progress']['expected']}%"),
                      ('Deadline', ui.fmtDate(p['endDate']) + ', ' + ui.daysLeftText(p['daysLeft']).lower()),
                      ('Team', f"{p['team']}, {p['memberCount']} people")]:
@@ -73,8 +73,9 @@ class ProjectPage(ui.Page):
         # progress against plan
         frame, lay = ui.panel()
         lay.addWidget(ui.label('Progress against plan', 'h2'))
-        lay.addWidget(ui.label('Tasks completed each week compared with tasks scheduled to be due.', 'panel__sub'))
-        charts.burnup(lay, p['burnup'], p['totals']['total'])
+        lay.addWidget(ui.label('Estimated hours completed each week compared with hours scheduled to be due.',
+                               'panel__sub'))
+        charts.burnup(lay, p['burnup'], p['hours']['total'])
         self.detail.addWidget(frame)
 
         # where the tasks are
@@ -124,7 +125,7 @@ class ProjectPage(ui.Page):
                 if t['status'] == 'blocked':
                     status = '▲ ' + status
                     bold.add((i, 3))
-                rows.append([t['title'] + '\n' + t['area'], t['assignee'], when, status])
+                rows.append([t['title'] + '\n' + f"{t['area']} · {t['hours']:g} h", t['assignee'], when, status])
             lay.addWidget(charts.makeTable(['Task', 'Assigned to', 'Late by' if overdue else 'Due', 'Status'],
                                            rows, bold))
         else:

@@ -198,7 +198,7 @@ def renderNav(active):
     lay.addSpacing(22)
 
     for i in NAV_ITEMS:
-        if i.get('managerOnly') and user['role'] != 'manager':
+        if i.get('managerOnly') and not session.isManager():      # managers and team leaders
             continue
         link = QPushButton(i['label'])
         link.setObjectName('navLink')
@@ -217,7 +217,7 @@ def renderNav(active):
     avatar.setObjectName('avatar')
     avatar.setFixedSize(34, 34)
     avatar.setAlignment(Qt.AlignCenter)
-    role = 'Project manager' if user['role'] == 'manager' else 'Staff'
+    role = {'manager': 'Project manager', 'team_leader': 'Team leader'}.get(user['role'], 'Staff')
     text = QLabel(f"<b>{esc(user['name'])}</b><br><span style='color:#a9b8c7'>{role}</span>")
     who.addWidget(avatar)
     who.addSpacing(6)

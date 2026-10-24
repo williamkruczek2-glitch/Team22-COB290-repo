@@ -3,6 +3,8 @@ mock_data.py - stand-in for the database (Part 1 has no DB).   [was js/mockData.
 
 Every list here mirrors a future table:
   teams, employees, projects, tasks
+Tasks with projectId None are personal to-dos (R01). They never count
+towards workload or progress (forum, Dilip & Emma, 21 Oct).
 In Part 2, delete this file and point api.py at the real database.
 Dates are generated relative to "today" so the demo always looks current.
 A seeded random generator keeps the data identical on every run
@@ -66,28 +68,29 @@ teams = [
     {'id': 'T3', 'name': 'Admin & Support'},
 ]
 
+# hoursPerWeek = contracted hours (capacity). E07 and E16 are part-time.
 employees = [
     # Managers - the client's project-manager representatives
-    {'id': 'E01', 'name': 'Dilip Shah',      'email': 'dilip.shah@make-it-all.co.uk',   'teamId': 'T1', 'role': 'manager'},
-    {'id': 'E02', 'name': 'Emma Clarke',     'email': 'emma.clarke@make-it-all.co.uk',  'teamId': 'T2', 'role': 'manager'},
+    {'id': 'E01', 'name': 'Dilip Shah',      'email': 'dilip.shah@make-it-all.co.uk',   'teamId': 'T1', 'role': 'manager', 'hoursPerWeek': 37.5},
+    {'id': 'E02', 'name': 'Emma Clarke',     'email': 'emma.clarke@make-it-all.co.uk',  'teamId': 'T2', 'role': 'manager', 'hoursPerWeek': 37.5},
     # Software Development
-    {'id': 'E03', 'name': 'Clara Novak',     'email': 'clara.novak@make-it-all.co.uk',  'teamId': 'T1', 'role': 'specialist'},
-    {'id': 'E04', 'name': 'Bert Hughes',     'email': 'bert.hughes@make-it-all.co.uk',  'teamId': 'T1', 'role': 'specialist'},
-    {'id': 'E05', 'name': 'Priya Natarajan', 'email': 'priya.n@make-it-all.co.uk',      'teamId': 'T1', 'role': 'specialist'},
-    {'id': 'E06', 'name': 'Tom Okafor',      'email': 'tom.okafor@make-it-all.co.uk',   'teamId': 'T1', 'role': 'specialist'},
-    {'id': 'E07', 'name': 'Hannah Reid',     'email': 'hannah.reid@make-it-all.co.uk',  'teamId': 'T1', 'role': 'specialist'},
+    {'id': 'E03', 'name': 'Clara Novak',     'email': 'clara.novak@make-it-all.co.uk',  'teamId': 'T1', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E04', 'name': 'Bert Hughes',     'email': 'bert.hughes@make-it-all.co.uk',  'teamId': 'T1', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E05', 'name': 'Priya Natarajan', 'email': 'priya.n@make-it-all.co.uk',      'teamId': 'T1', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E06', 'name': 'Tom Okafor',      'email': 'tom.okafor@make-it-all.co.uk',   'teamId': 'T1', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E07', 'name': 'Hannah Reid',     'email': 'hannah.reid@make-it-all.co.uk',  'teamId': 'T1', 'role': 'specialist', 'hoursPerWeek': 22.5},
     # Infrastructure
-    {'id': 'E08', 'name': 'Luis Moreno',     'email': 'luis.moreno@make-it-all.co.uk',  'teamId': 'T2', 'role': 'specialist'},
-    {'id': 'E09', 'name': 'Aisha Begum',     'email': 'aisha.begum@make-it-all.co.uk',  'teamId': 'T2', 'role': 'specialist'},
-    {'id': 'E10', 'name': 'Sam Whitaker',    'email': 'sam.whitaker@make-it-all.co.uk', 'teamId': 'T2', 'role': 'specialist'},
-    {'id': 'E11', 'name': 'Grace Lin',       'email': 'grace.lin@make-it-all.co.uk',    'teamId': 'T2', 'role': 'specialist'},
-    {'id': 'E12', 'name': 'Owen Price',      'email': 'owen.price@make-it-all.co.uk',   'teamId': 'T2', 'role': 'specialist'},
+    {'id': 'E08', 'name': 'Luis Moreno',     'email': 'luis.moreno@make-it-all.co.uk',  'teamId': 'T2', 'role': 'team_leader', 'hoursPerWeek': 37.5},
+    {'id': 'E09', 'name': 'Aisha Begum',     'email': 'aisha.begum@make-it-all.co.uk',  'teamId': 'T2', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E10', 'name': 'Sam Whitaker',    'email': 'sam.whitaker@make-it-all.co.uk', 'teamId': 'T2', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E11', 'name': 'Grace Lin',       'email': 'grace.lin@make-it-all.co.uk',    'teamId': 'T2', 'role': 'specialist', 'hoursPerWeek': 37.5},
+    {'id': 'E12', 'name': 'Owen Price',      'email': 'owen.price@make-it-all.co.uk',   'teamId': 'T2', 'role': 'specialist', 'hoursPerWeek': 37.5},
     # Admin & Support
-    {'id': 'E13', 'name': 'Alice Morgan',    'email': 'alice.morgan@make-it-all.co.uk', 'teamId': 'T3', 'role': 'manager'},
-    {'id': 'E14', 'name': 'Ruth Adeyemi',    'email': 'ruth.adeyemi@make-it-all.co.uk', 'teamId': 'T3', 'role': 'staff'},
-    {'id': 'E15', 'name': 'Jack Dawson',     'email': 'jack.dawson@make-it-all.co.uk',  'teamId': 'T3', 'role': 'staff'},
-    {'id': 'E16', 'name': 'Mei Chen',        'email': 'mei.chen@make-it-all.co.uk',     'teamId': 'T3', 'role': 'staff'},
-    {'id': 'E17', 'name': 'Kofi Mensah',     'email': 'kofi.mensah@make-it-all.co.uk',  'teamId': 'T3', 'role': 'staff'},
+    {'id': 'E13', 'name': 'Alice Morgan',    'email': 'alice.morgan@make-it-all.co.uk', 'teamId': 'T3', 'role': 'manager', 'hoursPerWeek': 37.5},
+    {'id': 'E14', 'name': 'Ruth Adeyemi',    'email': 'ruth.adeyemi@make-it-all.co.uk', 'teamId': 'T3', 'role': 'staff', 'hoursPerWeek': 37.5},
+    {'id': 'E15', 'name': 'Jack Dawson',     'email': 'jack.dawson@make-it-all.co.uk',  'teamId': 'T3', 'role': 'staff', 'hoursPerWeek': 37.5},
+    {'id': 'E16', 'name': 'Mei Chen',        'email': 'mei.chen@make-it-all.co.uk',     'teamId': 'T3', 'role': 'staff', 'hoursPerWeek': 22.5},
+    {'id': 'E17', 'name': 'Kofi Mensah',     'email': 'kofi.mensah@make-it-all.co.uk',  'teamId': 'T3', 'role': 'staff', 'hoursPerWeek': 37.5},
 ]
 
 # health = share of due tasks actually done (drives on-track / behind / at-risk)
@@ -119,6 +122,9 @@ titles = {
     'Admin & Procurement': ['Raise purchase order', 'Update supplier list', 'Write user guide', 'Book training room', 'Collect sign-off'],
 }
 
+# Size band -> estimated hours.
+HOURS = {1: 4, 2: 8, 3: 16, 4: 24, 5: 40}
+
 projects, tasks = [], []
 taskNo = 1
 
@@ -131,7 +137,7 @@ for s in projectSeeds:
         area = pick(s['areas'])
         span = s['end'] - s['start']
         dueOff = jsRound(s['start'] + 5 + rand() * (span - 5))
-        est = 1 + math.floor(rand() * 5)                # estimate in working days
+        est = 1 + math.floor(rand() * 5)                # size band 1-5 (kept so the random sequence is unchanged)
         createdOff = max(s['start'], dueOff - est - math.floor(rand() * 10))
         isPastDue = dueOff <= 0
         doneChance = s['health'] if isPastDue else s['health'] * 0.22
@@ -158,12 +164,21 @@ for s in projectSeeds:
             'assigneeId': pick(s['members']),
             'status': status,                        # todo | in_progress | blocked | done
             'priority': pick(['low', 'medium', 'medium', 'high']),
-            'estimateDays': est,
+            'estimateHours': HOURS[est],             # tasks vary a lot in size: 4h to 40h
             'createdDate': iso(d(createdOff)),
             'dueDate': iso(d(dueOff)),
             'completedDate': completed,
             'reopened': rand() < difficulty * 0.6,   # was marked done, then sent back
         })
         taskNo += 1
+
+# Personal to-dos (R01): no projectId, so they're left out of workload and progress.
+for i, (who, title, due, hrs) in enumerate([('E03', 'Book annual leave', 5, 1), ('E05', 'Finish security e-learning', 10, 3),
+                                             ('E09', 'Tidy desk drawer cables', 2, 1), ('E14', 'Update my contact details', 1, 1)]):
+    tasks.append({
+        'id': 'TD' + str(i + 1).zfill(2), 'projectId': None, 'title': title, 'area': None, 'assigneeId': who,
+        'status': 'todo', 'priority': 'low', 'estimateHours': hrs, 'createdDate': iso(today),
+        'dueDate': iso(d(due)), 'completedDate': None, 'reopened': False,
+    })
 
 db = {'teams': teams, 'employees': employees, 'projects': projects, 'tasks': tasks, 'areas': areas, 'today': iso(today)}
