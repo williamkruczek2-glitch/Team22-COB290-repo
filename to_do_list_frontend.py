@@ -33,6 +33,12 @@ class ListOfTasks(PQ.QWidget):
         scroll.setWidgetResizable(True)
         scroll.setWidget(container)
 
+        # creates the layout for the whole page
+        full_layout = PQ.QVBoxLayout(self)
+        # separates the header and task list
+        full_layout.setSpacing(16)
+        full_layout.addLayout(header_layout)
+        full_layout.addWidget(scroll)
 
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
