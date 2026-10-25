@@ -1,7 +1,32 @@
 import PySide6.QtWidgets as PQ
 import to_do_list_backend as backend
 
+# This is a reusable object which represents a task
+class TaskObject(PQ.QFrame):
+    def __init__(self, title, dueDate):
+        super().__init__()
 
+        # creates the text to display the title of the task
+        title_label = PQ.QLabel(title)
+
+        # creates the text to display the due date of the task
+        due_label = PQ.QLabel(dueDate)
+
+        # creates a layout to store the text
+        text_layout = PQ.QVBoxLayout()
+        # adds the text to the layout
+        text_layout.addWidget(title_label)
+        text_layout.addWidget(due_label)
+
+        # creates a button for task deletion
+        delete_button = PQ.QPushButton("X")
+        delete_button.clicked.connect(deleteTask())
+
+        # creates the overall layout of the frame
+        layout = PQ.QHBoxLayout()
+        layout.addLayout(text_layout)
+        layout.addWidget(delete_button)
+        
 
 # This is the class which represents the list of tasks
 class ListOfTasks(PQ.QWidget):
@@ -39,6 +64,12 @@ class ListOfTasks(PQ.QWidget):
         full_layout.setSpacing(16)
         full_layout.addLayout(header_layout)
         full_layout.addWidget(scroll)
+        
+        # adds new tasks to the list of tasks
+        def addTask(self, title, dueDate):
+            backend.add_item(title, dueDate, "1234")
+            # currently we do not have a way of creating a task dynamically so next we create a new class.
+            
 
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
@@ -88,15 +119,7 @@ class ToDoWindow(PQ.QMainWindow):
             # dynamically updates the text on the screen when a new task is added
             self.label.setText(self.viewTasks())
 
-    '''def addTask(self):
-        # stores the text from the text box in a variable
-        title = self.textBox.text()
-        # stores the date from the date input in a variable
-        date = self.dateInput.date()
-        # the backend functions are utilised via the UI
-        backend.add_item(title, date.toString("yyyy-MM-dd"), "1234")
-        # dynamically updates the text on the screen when a new task is added
-        self.label.setText(self.viewTasks())'''
+    
 
     def viewTasks(self):
         # fetches the tasks from the backend
