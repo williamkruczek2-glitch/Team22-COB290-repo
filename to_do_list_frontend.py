@@ -5,28 +5,28 @@ import to_do_list_backend as backend
 class TaskObject(PQ.QFrame):
     def __init__(self, title, dueDate):
         super().__init__()
-
-        # creates the text to display the title of the task
-        title_label = PQ.QLabel(title)
-
-        # creates the text to display the due date of the task
-        due_label = PQ.QLabel(dueDate)
-
         # creates a layout to store the text
         text_layout = PQ.QVBoxLayout()
+        
+        # creates the text to display the title of the task
+        title_label = PQ.QLabel(title)
+        # creates the text to display the due date of the task
+        due_label = PQ.QLabel(dueDate)
         # adds the text to the layout
         text_layout.addWidget(title_label)
         text_layout.addWidget(due_label)
 
         # creates a button for task deletion
         delete_button = PQ.QPushButton("X")
-        delete_button.clicked.connect(deleteTask())
+        #delete_button.clicked.connect(deleteTask())
 
         # creates the overall layout of the frame
         layout = PQ.QHBoxLayout()
         layout.addLayout(text_layout)
         layout.addWidget(delete_button)
-        
+
+        # sets the layout for the task
+        self.setLayout(layout)
 
 # This is the class which represents the list of tasks
 class ListOfTasks(PQ.QWidget):
@@ -45,14 +45,13 @@ class ListOfTasks(PQ.QWidget):
         header_layout.addWidget(page_heading)
         header_layout.addWidget(add_task_button)
 
-        # creates a layout for the list of tasks
-        self.task_list_layout = PQ.QVBoxLayout()
-        self.task_list_layout.setSpacing(10)
-
         # encapsulates the tasks in a container which is easier to deal with
         container = PQ.QWidget()
-        container.setLayout(self.task_list_layout)
-
+        
+        # creates a layout for the list of tasks
+        self.task_list_layout = PQ.QVBoxLayout(container)
+        self.task_list_layout.setSpacing(10)
+        
         # makes it so that the list is scrollable
         scroll = PQ.QScrollArea()
         scroll.setWidgetResizable(True)
@@ -67,21 +66,22 @@ class ListOfTasks(PQ.QWidget):
 
         self.loadTasks()
         
-        # adds new tasks to the list of tasks
-        def addTask(self, title, dueDate):
-            # adds the task to the backend
-            backend.add_item(title, dueDate, "1234")
-            self.loadTasks()
+    # adds new tasks to the list of tasks
+    def addTask(self, title, dueDate):
+        # adds the task to the backend
+        backend.add_item(title, dueDate, "1234")
+        self.loadTasks()
 
-        def loadTasks(self):
-            # loads list of tasks into list
-            tasks = backend.view_items()
-            # iterates through the tasks
-            for task in tasks:
-                # instantiates class object
-                taskObj = TaskObject(task["title"], task["dueDate"])
-                # adds the task to the window
-                self.task_list_layout.addWidget(taskObj)
+    def loadTasks(self):
+        # loads list of tasks into list
+        tasks = backend.view_items()
+        # iterates through the tasks
+        for task in tasks:
+            print(task["title"])
+            # instantiates class object
+            taskObj = TaskObject(task["title"], task["dueDate"])
+            # adds the task to the window
+            self.task_list_layout.addWidget(taskObj)
 
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
