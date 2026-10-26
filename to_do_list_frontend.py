@@ -46,12 +46,12 @@ class ListOfTasks(PQ.QWidget):
         header_layout.addWidget(add_task_button)
 
         # creates a layout for the list of tasks
-        task_list_layout = PQ.QVBoxLayout()
-        task_list_layout.setSpacing(10)
+        self.task_list_layout = PQ.QVBoxLayout()
+        self.task_list_layout.setSpacing(10)
 
         # encapsulates the tasks in a container which is easier to deal with
         container = PQ.QWidget()
-        container.setLayout(task_list_layout)
+        container.setLayout(self.task_list_layout)
 
         # makes it so that the list is scrollable
         scroll = PQ.QScrollArea()
@@ -64,12 +64,24 @@ class ListOfTasks(PQ.QWidget):
         full_layout.setSpacing(16)
         full_layout.addLayout(header_layout)
         full_layout.addWidget(scroll)
+
+        self.loadTasks()
         
         # adds new tasks to the list of tasks
         def addTask(self, title, dueDate):
+            # adds the task to the backend
             backend.add_item(title, dueDate, "1234")
-            # currently we do not have a way of creating a task dynamically so next we create a new class.
-            
+            self.loadTasks()
+
+        def loadTasks(self):
+            # loads list of tasks into list
+            tasks = backend.view_items()
+            # iterates through the tasks
+            for task in tasks:
+                # instantiates class object
+                taskObj = TaskObject(task["title"], task["dueDate"])
+                # adds the task to the window
+                self.task_list_layout.addWidget(taskObj)
 
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
@@ -79,56 +91,13 @@ class ToDoWindow(PQ.QMainWindow):
         self.setWindowTitle("To Do List")
         # sets window size
         self.resize(400,500)
-        
-        # creates a container so multiple widgets can exist
-        container = PQ.QWidget()
-        self.setCentralWidget(container)
-        # initialises layout
-        layout = PQ.QVBoxLayout()
-        container.setLayout(layout)
 
-        # creates display text
-        self.label = PQ.QLabel(self.viewTasks(), self)
-        # displays text on the screen
-        layout.addWidget(self.label)
-
-        # creates a text box
-        self.textBox = PQ.QLineEdit(self)
-        layout.addWidget(self.textBox)
-
-        # creates a input for dates
-        self.dateInput = PQ.QDateEdit(self)
-        layout.addWidget(self.dateInput)
-
-        # creates a button
-        self.button = PQ.QPushButton("Add Task")
-        # adds functionality to the button
-        self.button.clicked.connect(self.addTask)
-        # displays the button
-        layout.addWidget(self.button)
-        self.setLayout(layout)
-
-
-    def taskView(self):
-            # stores the text from the text box in a variable
-            title = self.textBox.text()
-            # stores the date from the date input in a variable
-            date = self.dateInput.date()
-            # the backend functions are utilised via the UI
-            backend.add_item(title, date.toString("yyyy-MM-dd"), "1234")
-            # dynamically updates the text on the screen when a new task is added
-            self.label.setText(self.viewTasks())
-
-    
-
-    def viewTasks(self):
-        # fetches the tasks from the backend
-        taskArr = backend.view_items()
-        taskStr = ""
-        # converts array of tasks into a string
-        for task in taskArr:
-            taskStr += str(task["title"]) + " | " + str(task["dueDate"]) + " | " + str(task["status"])+ "\n"
-        return taskStr
+        # creates a stacked widget so that you can switch between adding and viewing tasks
+        self.stack = PQ.QStackedWidget()
+        # adds the tasks list to the stack
+        self.task_list = ListOfTasks()
+        self.stack.addWidget(self.task_list)
+        self.setCentralWidget(self.stack)
 
 
 # opens window on run
