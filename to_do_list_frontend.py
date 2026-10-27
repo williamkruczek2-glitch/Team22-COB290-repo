@@ -32,7 +32,7 @@ class TaskObject(PQ.QFrame):
 
 # This is the class which represents the list of tasks
 class ListOfTasks(PQ.QWidget):
-    def __init__(self):
+    def __init__(self, add_page):
         super().__init__()
 
         # creates a heading object
@@ -40,6 +40,8 @@ class ListOfTasks(PQ.QWidget):
 
         # creates a button so that the user can add tasks
         add_task_button = PQ.QPushButton("Add Task")
+        # switches pages
+        add_task_button.clicked.connect(add_page)
 
         # this splits the heading and Add Task button up from the actual tasks
         header_layout = PQ.QHBoxLayout()
@@ -71,7 +73,6 @@ class ListOfTasks(PQ.QWidget):
 
         # loads the tasks from the flat file into the frontend via the backend
         self.loadTasks()
-        self.addTask("test", "2026-10-31")
         
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
@@ -159,12 +160,15 @@ class ToDoWindow(PQ.QMainWindow):
         # creates a stacked widget so that you can switch between adding and viewing tasks
         self.stack = PQ.QStackedWidget()
         # adds the pages to the stack
-        self.task_list = ListOfTasks()
+        self.task_list = ListOfTasks(add_page=self.show_add_page)
         self.add_tasks = AddTaskPage()
         self.stack.addWidget(self.task_list)
         self.stack.addWidget(self.add_tasks)
         self.setCentralWidget(self.stack)
 
+    # switches to the add tasks page
+    def show_add_page(self):
+        self.stack.setCurrentWidget(self.add_tasks)
 
 # opens window on run
 if __name__ == "__main__":
