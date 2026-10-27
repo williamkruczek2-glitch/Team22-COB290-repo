@@ -3,10 +3,11 @@ import to_do_list_backend as backend
 
 # This is a reusable object which represents a task
 class TaskObject(PQ.QFrame):
-    def __init__(self, title, dueDate):
+    def __init__(self, title, dueDate, taskId, delete_task):
         super().__init__()
         # creates a layout to store the text
         text_layout = PQ.QVBoxLayout()
+
         
         # creates the text to display the title of the task
         title_label = PQ.QLabel(title)
@@ -18,7 +19,7 @@ class TaskObject(PQ.QFrame):
 
         # creates a button for task deletion
         delete_button = PQ.QPushButton("X")
-        #delete_button.clicked.connect(deleteTask())
+        delete_button.clicked.connect(lambda: delete_task(taskId))
 
         # creates the overall layout of the frame
         layout = PQ.QHBoxLayout()
@@ -27,6 +28,8 @@ class TaskObject(PQ.QFrame):
 
         # sets the layout for the task
         self.setLayout(layout)
+
+    
 
 # This is the class which represents the list of tasks
 class ListOfTasks(PQ.QWidget):
@@ -64,6 +67,8 @@ class ListOfTasks(PQ.QWidget):
         full_layout.addLayout(header_layout)
         full_layout.addWidget(scroll)
 
+
+        # loads the tasks from the flat file into the frontend via the backend
         self.loadTasks()
         
     # adds new tasks to the list of tasks
@@ -77,11 +82,16 @@ class ListOfTasks(PQ.QWidget):
         tasks = backend.view_items()
         # iterates through the tasks
         for task in tasks:
-            print(task["title"])
             # instantiates class object
-            taskObj = TaskObject(task["title"], task["dueDate"])
+            taskObj = TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task)           
             # adds the task to the window
             self.task_list_layout.addWidget(taskObj)
+
+    # deletes a task from the list and reloads the ui
+    def delete_task(self, taskId):
+        backend.remove_item(taskId)
+        print("works")
+        self.loadTasks()
 
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):

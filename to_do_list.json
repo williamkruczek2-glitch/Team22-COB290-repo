@@ -1,50 +1,8 @@
 [
     {
-        "projectId": "35fee640-09c7-4a73-81c3-13008e719a0f",
-        "title": "Some Task",
-        "dueDate": "2026-10-30",
-        "status": "todo",
-        "assigneeId": "1234"
-    },
-    {
-        "projectId": "b40cc997-889c-44cd-92e7-47c83f5028cf",
-        "title": "some task",
-        "dueDate": "2026-10-30",
-        "status": "todo",
-        "assigneeId": "1234"
-    },
-    {
-        "projectId": "1ea54539-29ac-45e1-b4f7-88d0aa1a5ad2",
+        "projectId": "0ee0435d-7344-4e58-9023-0d92988034a1",
         "title": "some task",
         "dueDate": "2026-10-31",
-        "status": "todo",
-        "assigneeId": "1234"
-    },
-    {
-        "projectId": "cbcd66bb-79d1-4f12-b660-c22a9e1778e9",
-        "title": "new task",
-        "dueDate": "2026-12-04",
-        "status": "todo",
-        "assigneeId": "1234"
-    },
-    {
-        "projectId": "307b2c2d-8a85-43e9-8cca-fe06d748fbcf",
-        "title": "new task",
-        "dueDate": "2026-11-20",
-        "status": "todo",
-        "assigneeId": "1234"
-    },
-    {
-        "projectId": "307b2c2d-8a85-43e9-8cca-fe06d748fbcf",
-        "title": "new task",
-        "dueDate": "2026-11-20",
-        "status": "todo",
-        "assigneeId": "1234"
-    },
-    {
-        "projectId": "307b2c2d-8a85-43e9-8cca-fe06d748fbcf",
-        "title": "new task",
-        "dueDate": "2026-11-20",
         "status": "todo",
         "assigneeId": "1234"
     }
