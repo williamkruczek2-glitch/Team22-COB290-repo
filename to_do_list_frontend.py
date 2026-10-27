@@ -67,9 +67,12 @@ class ListOfTasks(PQ.QWidget):
         full_layout.addLayout(header_layout)
         full_layout.addWidget(scroll)
 
+        # initialises the array for task objects
+        self.taskArr = []
 
         # loads the tasks from the flat file into the frontend via the backend
         self.loadTasks()
+        self.addTask("test", "2026-10-31")
         
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
@@ -78,19 +81,29 @@ class ListOfTasks(PQ.QWidget):
         self.loadTasks()
 
     def loadTasks(self):
+        # resets the screen
+        for task in self.taskArr:
+            # removes the task from the list
+            self.task_list_layout.removeWidget(task)
+            # schedules the task object for asynchronous deletion so that the script doesn't crash
+            task.deleteLater()
+        # resets the task array
+        self.taskArr = []
+
         # loads list of tasks into list
         tasks = backend.view_items()
         # iterates through the tasks
         for task in tasks:
             # instantiates class object
-            taskObj = TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task)           
+            taskObj = TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task)
+            # saves all the task objects incase of deletion
+            self.taskArr.append(taskObj)
             # adds the task to the window
             self.task_list_layout.addWidget(taskObj)
 
     # deletes a task from the list and reloads the ui
     def delete_task(self, taskId):
         backend.remove_item(taskId)
-        print("works")
         self.loadTasks()
 
 # This is the root class which is like a container for the different pages of the app
