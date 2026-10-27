@@ -109,7 +109,7 @@ class ListOfTasks(PQ.QWidget):
 
 # This is the class which represents the page for adding tasks
 class AddTaskPage(PQ.QWidget):
-    def __init__(self):
+    def __init__(self, list_page):
         super().__init__()
 
         page_heading = PQ.QLabel("Add Task")
@@ -130,6 +130,7 @@ class AddTaskPage(PQ.QWidget):
         
         # adds a way to get back to the main screen
         cancel_button = PQ.QPushButton("Cancel")
+        cancel_button.clicked.connect(list_page)
 
         # creates a layout so that the buttons are displayed horizontal
         button_layout = PQ.QHBoxLayout()
@@ -161,7 +162,7 @@ class ToDoWindow(PQ.QMainWindow):
         self.stack = PQ.QStackedWidget()
         # adds the pages to the stack
         self.task_list = ListOfTasks(add_page=self.show_add_page)
-        self.add_tasks = AddTaskPage()
+        self.add_tasks = AddTaskPage(list_page=self.show_list_page)
         self.stack.addWidget(self.task_list)
         self.stack.addWidget(self.add_tasks)
         self.setCentralWidget(self.stack)
@@ -169,6 +170,10 @@ class ToDoWindow(PQ.QMainWindow):
     # switches to the add tasks page
     def show_add_page(self):
         self.stack.setCurrentWidget(self.add_tasks)
+
+    # switches to the task list page
+    def show_list_page(self):
+        self.stack.setCurrentWidget(self.task_list)
 
 # opens window on run
 if __name__ == "__main__":
