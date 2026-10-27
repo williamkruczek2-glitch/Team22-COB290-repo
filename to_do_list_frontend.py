@@ -138,7 +138,7 @@ class AddTaskPage(PQ.QWidget):
         button_layout.addWidget(submit_button)
 
         # creates a layout for the whole screen
-        layout = PQ.QVBoxLayout()
+        layout = PQ.QVBoxLayout(self)
         # sets the spacing for the layout
         layout.setSpacing(8)
         # adds all the widget to the layout
