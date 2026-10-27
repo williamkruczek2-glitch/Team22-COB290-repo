@@ -29,7 +29,6 @@ class TaskObject(PQ.QFrame):
         # sets the layout for the task
         self.setLayout(layout)
 
-    
 
 # This is the class which represents the list of tasks
 class ListOfTasks(PQ.QWidget):
@@ -106,6 +105,48 @@ class ListOfTasks(PQ.QWidget):
         backend.remove_item(taskId)
         self.loadTasks()
 
+
+# This is the class which represents the page for adding tasks
+class AddTaskPage(PQ.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        page_heading = PQ.QLabel("Add Task")
+
+        # creates a text box with a label saying what it is
+        title_label = PQ.QLabel("Title")
+        self.enter_title = PQ.QLineEdit()
+
+        # creates a box which inputs date
+        date_label = PQ.QLabel("Due Date")
+        self.enter_date = PQ.QDateEdit()
+        # makes the input process more convinient
+        self.enter_date.setCalendarPopup(True)
+        self.enter_date.setDisplayFormat("yyyy MM dd")
+
+        # adds the submit button
+        submit_button = PQ.QPushButton("Submit")
+        
+        # adds a way to get back to the main screen
+        cancel_button = PQ.QPushButton("Cancel")
+
+        # creates a layout so that the buttons are displayed horizontal
+        button_layout = PQ.QHBoxLayout()
+        button_layout.addWidget(cancel_button)
+        button_layout.addWidget(submit_button)
+
+        # creates a layout for the whole screen
+        layout = PQ.QVBoxLayout()
+        # sets the spacing for the layout
+        layout.setSpacing(8)
+        # adds all the widget to the layout
+        layout.addWidget(page_heading)
+        layout.addWidget(title_label)
+        layout.addWidget(self.enter_title)
+        layout.addWidget(date_label)
+        layout.addWidget(self.enter_date)
+        layout.addLayout(button_layout)
+
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
     # initialisation
@@ -117,9 +158,11 @@ class ToDoWindow(PQ.QMainWindow):
 
         # creates a stacked widget so that you can switch between adding and viewing tasks
         self.stack = PQ.QStackedWidget()
-        # adds the tasks list to the stack
+        # adds the pages to the stack
         self.task_list = ListOfTasks()
+        self.add_tasks = AddTaskPage()
         self.stack.addWidget(self.task_list)
+        self.stack.addWidget(self.add_tasks)
         self.setCentralWidget(self.stack)
 
 
