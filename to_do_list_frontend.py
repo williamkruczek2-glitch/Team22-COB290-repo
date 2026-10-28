@@ -109,7 +109,7 @@ class ListOfTasks(PQ.QWidget):
 
 # This is the class which represents the page for adding tasks
 class AddTaskPage(PQ.QWidget):
-    def __init__(self, list_page):
+    def __init__(self, list_page, submit_task):
         super().__init__()
 
         page_heading = PQ.QLabel("Add Task")
@@ -123,10 +123,11 @@ class AddTaskPage(PQ.QWidget):
         self.enter_date = PQ.QDateEdit()
         # makes the input process more convinient
         self.enter_date.setCalendarPopup(True)
-        self.enter_date.setDisplayFormat("yyyy MM dd")
+        self.enter_date.setDisplayFormat("dd/MM/yyyy")
 
         # adds the submit button
         submit_button = PQ.QPushButton("Submit")
+        submit_button.clicked.connect(submit_task)
         
         # adds a way to get back to the main screen
         cancel_button = PQ.QPushButton("Cancel")
@@ -162,7 +163,7 @@ class ToDoWindow(PQ.QMainWindow):
         self.stack = PQ.QStackedWidget()
         # adds the pages to the stack
         self.task_list = ListOfTasks(add_page=self.show_add_page)
-        self.add_tasks = AddTaskPage(list_page=self.show_list_page)
+        self.add_tasks = AddTaskPage(list_page=self.show_list_page, submit_task=self.submit_task)
         self.stack.addWidget(self.task_list)
         self.stack.addWidget(self.add_tasks)
         self.setCentralWidget(self.stack)
@@ -174,6 +175,11 @@ class ToDoWindow(PQ.QMainWindow):
     # switches to the task list page
     def show_list_page(self):
         self.stack.setCurrentWidget(self.task_list)
+
+    # takes in the inputs from the add task page and adds a task to the list
+    def submit_task(self):
+        self.task_list.addTask(self.add_tasks.enter_title.text(), self.add_tasks.enter_date.date().toString("yyyy-MM-dd"))
+        self.show_list_page()
 
 # opens window on run
 if __name__ == "__main__":
