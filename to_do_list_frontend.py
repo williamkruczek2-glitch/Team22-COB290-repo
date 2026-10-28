@@ -1,5 +1,22 @@
 import PySide6.QtWidgets as PQ
+from PySide6.QtCore import Qt
+import styles
 import to_do_list_backend as backend
+
+
+def stylesheet():
+    v = styles.T
+    return f"""
+    QPushButton[class="primary"] {{ background: {v['accent']}; color: {v['surface']}; border: none; border-radius: 6px; padding: 8px 16px; font-weight: bold; }}
+    QPushButton[class="primary"]:hover {{ background: {v['series-1']}; }}
+    QPushButton[class="secondary"] {{ background: {v['surface']}; color: {v['ink']}; border: 1px solid {v['rule']}; border-radius: 6px; padding: 8px 16px; }}
+    QPushButton[class="secondary"]:hover {{ background: {v['surface-2']}; }}
+    QPushButton[class="iconBtn"] {{ background: transparent; color: {v['muted']}; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12pt; }}
+    QPushButton[class="iconBtn"]:hover {{ background: {v['surface-2']}; color: {v['critical']}; }}
+    QLineEdit, QDateEdit {{ color: {v['ink']}; background: {v['surface']}; border: 1px solid {v['rule']}; border-radius: 6px; padding: 6px 10px; }}
+    QLineEdit:focus, QDateEdit:focus {{ border: 1px solid {v['accent']}; }}
+    """
+
 
 # This is a reusable object which represents a task
 class TaskObject(PQ.QFrame):
@@ -184,6 +201,11 @@ class ToDoWindow(PQ.QMainWindow):
 # opens window on run
 if __name__ == "__main__":
     app = PQ.QApplication([])
+
+    #setting up the stylesheet
+    styles.useTheme(app.styleHints().colorScheme() == Qt.ColorScheme.Dark)
+    app.setStyleSheet(styles.stylesheet() + stylesheet())
+    
     window = ToDoWindow()
     window.show()
     # closes the app when the x is clicked
