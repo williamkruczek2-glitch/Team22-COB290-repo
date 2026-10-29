@@ -4,6 +4,7 @@ import styles
 import to_do_list_backend as backend
 
 
+# extra styling for widgets that aren't included in the others' code 
 def stylesheet():
     v = styles.T
     return f"""
@@ -16,6 +17,13 @@ def stylesheet():
     QLineEdit, QDateEdit {{ color: {v['ink']}; background: {v['surface']}; border: 1px solid {v['rule']}; border-radius: 6px; padding: 6px 10px; }}
     QLineEdit:focus, QDateEdit:focus {{ border: 1px solid {v['accent']}; }}
     """
+
+# a reusable button blueprint which generates button of different styles
+def buttonObj(text, style):
+    button = PQ.QPushButton(text)
+    # sets the button's style type
+    button.setProperty("class", style)
+    return button
 
 
 # This is a reusable object which represents a task
@@ -35,7 +43,7 @@ class TaskObject(PQ.QFrame):
         text_layout.addWidget(due_label)
 
         # creates a button for task deletion
-        delete_button = PQ.QPushButton("X")
+        delete_button = buttonObj("X", "iconBtn")
         delete_button.clicked.connect(lambda: delete_task(taskId))
 
         # creates the overall layout of the frame
@@ -56,7 +64,7 @@ class ListOfTasks(PQ.QWidget):
         page_heading = PQ.QLabel("My To Do List")
 
         # creates a button so that the user can add tasks
-        add_task_button = PQ.QPushButton("Add Task")
+        add_task_button = buttonObj("Add Task", "primary")
         # switches pages
         add_task_button.clicked.connect(add_page)
 
@@ -143,11 +151,11 @@ class AddTaskPage(PQ.QWidget):
         self.enter_date.setDisplayFormat("dd/MM/yyyy")
 
         # adds the submit button
-        submit_button = PQ.QPushButton("Submit")
+        submit_button = buttonObj("Submit", "primary")
         submit_button.clicked.connect(submit_task)
         
         # adds a way to get back to the main screen
-        cancel_button = PQ.QPushButton("Cancel")
+        cancel_button = buttonObj("Cancel", "primary")
         cancel_button.clicked.connect(list_page)
 
         # creates a layout so that the buttons are displayed horizontal
