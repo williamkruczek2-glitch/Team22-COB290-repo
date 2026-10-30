@@ -44,15 +44,14 @@ def dueDateText(dueDate):
 # This is a reusable object which represents a task
 def TaskObject(title, dueDate, taskId, delete_task):
         # ui.panel is a resuable function which generates a frame
-        task = ui.panel()
-        task_layout = ui.panel()
+        task, task_layout = ui.panel()
 
         # creates a layout to store the text
         text_layout = PQ.QVBoxLayout()
         text_layout.setSpacing(2)
         # adds the text to the layout
         text_layout.addWidget(ui.label(title, "h3"))
-        text_layout.addWidget(ui.label(dueDateText(dueDate)), "muted")
+        text_layout.addWidget(ui.label(dueDateText(dueDate), "muted"))
 
         # creates a button for task deletion
         delete_button = buttonObj("X", "iconBtn")
