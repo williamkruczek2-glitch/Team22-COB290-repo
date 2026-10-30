@@ -1,6 +1,10 @@
 import PySide6.QtWidgets as PQ
 from PySide6.QtCore import Qt
+
+from datetime import date
+
 import styles
+import ui
 import to_do_list_backend as backend
 
 
@@ -25,6 +29,17 @@ def buttonObj(text, style):
     button.setProperty("class", style)
     return button
 
+# sanitises the date so that it is a valid deadline
+def dueDateText(dueDate):
+    try:
+        # generates the number of days until the deadline
+        days = (date.fromisoformat(dueDate) - date.today()).days
+    except ValueError:
+        # returns the unaffected date if it is broken
+        return dueDate
+    # returns the date and remaining days
+    dueDateStr = str(ui.fmtDate(dueDate))+" · "+ str(ui.daysLeftText(days))
+
 
 # This is a reusable object which represents a task
 class TaskObject(PQ.QFrame):
@@ -36,11 +51,9 @@ class TaskObject(PQ.QFrame):
         
         # creates the text to display the title of the task
         title_label = PQ.QLabel(title)
-        # creates the text to display the due date of the task
-        due_label = PQ.QLabel(dueDate)
         # adds the text to the layout
         text_layout.addWidget(title_label)
-        text_layout.addWidget(due_label)
+        text_layout.addWidget(ui.label(dueDateText(dueDate)), 'muted')
 
         # creates a button for task deletion
         delete_button = buttonObj("X", "iconBtn")
