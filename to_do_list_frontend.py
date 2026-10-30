@@ -1,5 +1,6 @@
 import PySide6.QtWidgets as PQ
 from PySide6.QtCore import Qt, QDate
+from PySide6.QtGui import QFont
 
 from datetime import date
 
@@ -67,7 +68,7 @@ def TaskObject(title, dueDate, taskId, delete_task):
 
 
 # This is the class which represents the list of tasks
-class ListOfTasks(ui.Page):
+class ToDoWindow(ui.Page):
     def __init__(self):
         super().__init__()
         self.display_list_page()
@@ -83,7 +84,7 @@ class ListOfTasks(ui.Page):
         # creates a button so that the user can add tasks
         add_task_button = buttonObj("Add Task", "primary")
         # switches pages
-        add_task_button.clicked.connect(add_page)
+        add_task_button.clicked.connect(self.display_add_page())
         header_layout.addWidget(add_task_button)
         self.main.addLayout(header_layout)
 
@@ -112,7 +113,7 @@ class ListOfTasks(ui.Page):
         
         # adds a way to get back to the main screen
         cancel_button = buttonObj("Cancel", "secondary")
-        cancel_button.clicked.connect(list_page)
+        cancel_button.clicked.connect(self.display_list_page())
 
         # creates a layout so that the buttons are displayed horizontal
         button_layout = PQ.QHBoxLayout()
@@ -140,16 +141,14 @@ class ListOfTasks(ui.Page):
         page_layout.addSpacing(12)
         page_layout.addLayout(button_layout)
         self.main.addWidget(page)
-
-
-      
+  
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
         # adds the task to the backend
         backend.add_item(title, dueDate, "1234")
-        self.loadTasks()
+        self.display_list_page()
 
-    def loadTasks(self):
+    '''def loadTasks(self):
         # resets the screen
         for task in self.taskArr:
             # removes the task from the list
@@ -168,15 +167,20 @@ class ListOfTasks(ui.Page):
             # saves all the task objects incase of deletion
             self.taskArr.append(taskObj)
             # adds the task to the window
-            self.task_list_layout.addWidget(taskObj)
+            self.task_list_layout.addWidget(taskObj)'''
 
     # deletes a task from the list and reloads the ui
     def delete_task(self, taskId):
         backend.remove_item(taskId)
-        self.loadTasks()
+        self.display_list_page()
+
+    # takes in the inputs from the add task page and adds a task to the list
+    def submit_task(self):
+        self.addTask(self.enter_title.text(), self.enter_date.date().toString("yyyy-MM-dd"))
+        self.display_list_page()
 
 
-# This is the class which represents the page for adding tasks
+'''# This is the class which represents the page for adding tasks
 class AddTaskPage(PQ.QWidget):
     def __init__(self, list_page, submit_task):
         super().__init__()
@@ -217,10 +221,10 @@ class AddTaskPage(PQ.QWidget):
         layout.addWidget(self.enter_title)
         layout.addWidget(date_label)
         layout.addWidget(self.enter_date)
-        layout.addLayout(button_layout)
+        layout.addLayout(button_layout)'''
 
 
-# This is the root class which is like a container for the different pages of the app
+'''# This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
     # initialisation
     def __init__(self):
@@ -236,31 +240,27 @@ class ToDoWindow(PQ.QMainWindow):
         self.add_tasks = AddTaskPage(list_page=self.show_list_page, submit_task=self.submit_task)
         self.stack.addWidget(self.task_list)
         self.stack.addWidget(self.add_tasks)
-        self.setCentralWidget(self.stack)
+        self.setCentralWidget(self.stack)'''
 
-    # switches to the add tasks page
-    def show_add_page(self):
-        self.stack.setCurrentWidget(self.add_tasks)
+    
 
-    # switches to the task list page
-    def show_list_page(self):
-        self.stack.setCurrentWidget(self.task_list)
-
-    # takes in the inputs from the add task page and adds a task to the list
-    def submit_task(self):
-        self.task_list.addTask(self.add_tasks.enter_title.text(), self.add_tasks.enter_date.date().toString("yyyy-MM-dd"))
-        self.show_list_page()
 
 
 # opens window on run
 if __name__ == "__main__":
     app = PQ.QApplication([])
 
-    #setting up the stylesheet
+    # setting the styles of the page as a whole
+    app.setStyle("Fusion")
+    font = QFont()
+    font.setFamilies(["Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", "Arial"])
+    app.setFont(font)
     styles.useTheme(app.styleHints().colorScheme() == Qt.ColorScheme.Dark)
     app.setStyleSheet(styles.stylesheet() + stylesheet())
     
-    window = ToDoWindow()
+    window = PQ.QMainWindow()
+    window.resize(900, 640)
+    window.setCentralWidget(ToDoWindow())
     window.show()
     # closes the app when the x is clicked
     app.exec()
