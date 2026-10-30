@@ -42,18 +42,17 @@ def dueDateText(dueDate):
 
 
 # This is a reusable object which represents a task
-class TaskObject(PQ.QFrame):
-    def __init__(self, title, dueDate, taskId, delete_task):
-        super().__init__()
+def TaskObject(title, dueDate, taskId, delete_task):
+        # ui.panel is a resuable function which generates a frame
+        task = ui.panel()
+        task_layout = ui.panel()
+
         # creates a layout to store the text
         text_layout = PQ.QVBoxLayout()
-
-        
-        # creates the text to display the title of the task
-        title_label = PQ.QLabel(title)
+        text_layout.setSpacing(2)
         # adds the text to the layout
-        text_layout.addWidget(title_label)
-        text_layout.addWidget(ui.label(dueDateText(dueDate)), 'muted')
+        text_layout.addWidget(ui.label(title, "h3"))
+        text_layout.addWidget(ui.label(dueDateText(dueDate)), "muted")
 
         # creates a button for task deletion
         delete_button = buttonObj("X", "iconBtn")
@@ -63,9 +62,9 @@ class TaskObject(PQ.QFrame):
         layout = PQ.QHBoxLayout()
         layout.addLayout(text_layout)
         layout.addWidget(delete_button)
+        task_layout.addLayout(layout)
 
-        # sets the layout for the task
-        self.setLayout(layout)
+        return task
 
 
 # This is the class which represents the list of tasks
