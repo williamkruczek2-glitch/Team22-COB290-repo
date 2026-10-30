@@ -1,5 +1,5 @@
 import PySide6.QtWidgets as PQ
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QDate
 
 from datetime import date
 
@@ -68,7 +68,7 @@ def TaskObject(title, dueDate, taskId, delete_task):
 
 # This is the class which represents the list of tasks
 class ListOfTasks(ui.Page):
-    def __init__(self, add_page):
+    def __init__(self):
         super().__init__()
         self.display_list_page()
 
@@ -92,7 +92,57 @@ class ListOfTasks(ui.Page):
             self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task))
 
 
+    def display_add_page(self):
+        ui.clear(self.main)
+
+        self.main.addWidget("Add Task", "h1")
         
+        # creates a text box for the title
+        self.enter_title = PQ.QLineEdit()
+
+        # creates a box which inputs date
+        self.enter_date = PQ.QDateEdit(QDate.currentDate())
+        # makes the input process more convinient by only allowing dates
+        self.enter_date.setCalendarPopup(True)
+        self.enter_date.setDisplayFormat("dd/MM/yyyy")
+
+        # adds the submit button
+        submit_button = buttonObj("Submit", "primary")
+        submit_button.clicked.connect(submit_task)
+        
+        # adds a way to get back to the main screen
+        cancel_button = buttonObj("Cancel", "secondary")
+        cancel_button.clicked.connect(list_page)
+
+        # creates a layout so that the buttons are displayed horizontal
+        button_layout = PQ.QHBoxLayout()
+        
+        # spaces the buttons out for better readbility
+        button_layout.setSpacing(10)
+        button_layout.addStretch(1)
+        
+        button_layout.addWidget(cancel_button)
+        button_layout.addWidget(submit_button)
+
+        # creates a layout for the whole screen
+        page, page_layout = ui.panel()
+        page.setMaximumWidth(520)
+        
+        # adds all the widget to the layout
+        page_layout.addWidget(ui.label("Title", "filterlabel"))
+        page_layout.addWidget(self.enter_title)
+        
+        # adds a spacing which separates the widgets
+        page_layout.addSpacing(8)
+        page_layout.addWidget(ui.label("Due Date", "filterlabel"))
+        page_layout.addWidget(self.enter_date)
+        
+        page_layout.addSpacing(12)
+        page_layout.addLayout(button_layout)
+        self.main.addWidget(page)
+
+
+      
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
         # adds the task to the backend
@@ -169,6 +219,7 @@ class AddTaskPage(PQ.QWidget):
         layout.addWidget(self.enter_date)
         layout.addLayout(button_layout)
 
+
 # This is the root class which is like a container for the different pages of the app
 class ToDoWindow(PQ.QMainWindow):
     # initialisation
@@ -199,6 +250,7 @@ class ToDoWindow(PQ.QMainWindow):
     def submit_task(self):
         self.task_list.addTask(self.add_tasks.enter_title.text(), self.add_tasks.enter_date.date().toString("yyyy-MM-dd"))
         self.show_list_page()
+
 
 # opens window on run
 if __name__ == "__main__":
