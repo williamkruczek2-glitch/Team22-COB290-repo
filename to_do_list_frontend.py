@@ -67,48 +67,31 @@ def TaskObject(title, dueDate, taskId, delete_task):
 
 
 # This is the class which represents the list of tasks
-class ListOfTasks(PQ.QWidget):
+class ListOfTasks(ui.Page):
     def __init__(self, add_page):
         super().__init__()
+        self.display_list_page()
 
-        # creates a heading object
-        page_heading = PQ.QLabel("My To Do List")
-
+    def display_list_page(self):
+        # removes everything so there are no duplicates
+        ui.clear(self.main)
+        
+        # this splits the heading and Add Task button up from the actual tasks
+        header_layout = PQ.QHBoxLayout()
+        # add heading and Add Task button to the header
+        header_layout.addWidget(ui.label("My To Do List", "h1"))
         # creates a button so that the user can add tasks
         add_task_button = buttonObj("Add Task", "primary")
         # switches pages
         add_task_button.clicked.connect(add_page)
-
-        # this splits the heading and Add Task button up from the actual tasks
-        header_layout = PQ.QHBoxLayout()
-        # add heading and Add Task button to the header
-        header_layout.addWidget(page_heading)
         header_layout.addWidget(add_task_button)
+        self.main.addLayout(header_layout)
 
-        # encapsulates the tasks in a container which is easier to deal with
-        container = PQ.QWidget()
-        
-        # creates a layout for the list of tasks
-        self.task_list_layout = PQ.QVBoxLayout(container)
-        self.task_list_layout.setSpacing(10)
-        
-        # makes it so that the list is scrollable
-        scroll = PQ.QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll.setWidget(container)
+        tasks = backend.view_items()
+        for task in tasks:
+            self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task))
 
-        # creates the layout for the whole page
-        full_layout = PQ.QVBoxLayout(self)
-        # separates the header and task list
-        full_layout.setSpacing(16)
-        full_layout.addLayout(header_layout)
-        full_layout.addWidget(scroll)
 
-        # initialises the array for task objects
-        self.taskArr = []
-
-        # loads the tasks from the flat file into the frontend via the backend
-        self.loadTasks()
         
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
