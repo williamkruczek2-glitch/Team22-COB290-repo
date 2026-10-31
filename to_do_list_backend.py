@@ -39,7 +39,7 @@ def add_item(title, dueDate, assigneeId):
                 json.dump(data, f, indent=4)
     except ValueError:
         print("Date was invalid")
-        temporaryCLI()
+        #temporaryCLI()
     
 
 # removes to do items based on id
@@ -61,8 +61,19 @@ def view_items():
         data = json.load(f)
     return data
 
+def change_status(taskId, newStatus):
+    data = view_items()
+    for item in data:
+        if item["projectId"] == taskId:
+            item["status"] = newStatus
+            
 
-# temporary user interface implemented using a CLI approach which later be superseeded by the main frontend
+    with open("to_do_list.json", "w") as f:
+        json.dump(data, f, indent=4)
+    
+
+
+'''# temporary user interface implemented using a CLI approach which later be superseeded by the main frontend
 def temporaryCLI():
     # menu screen
     print("Welcome to the to do list interface.")
@@ -91,4 +102,4 @@ def temporaryCLI():
     else:
         temporaryCLI()
 
-#temporaryCLI()
+#temporaryCLI()'''

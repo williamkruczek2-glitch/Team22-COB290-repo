@@ -43,7 +43,7 @@ def dueDateText(dueDate):
 
 
 # This is a reusable object which represents a task
-def TaskObject(title, dueDate, taskId, delete_task):
+def TaskObject(title, dueDate, taskId, status, change_status, delete_task):
         # ui.panel is a resuable function which generates a frame
         task, task_layout = ui.panel()
 
@@ -56,12 +56,16 @@ def TaskObject(title, dueDate, taskId, delete_task):
 
         # creates a drop down box to show the status of completion
         statusDropDown = PQ.QComboBox()
-        statusDropDown.addItem("To Do")
-        statusDropDown.addItem("In Progress")
-        statusDropDown.addItem("Blocked")
-        statusDropDown.addItem("Done")
-        # sets the pointer of the drop down menu to start at "To Do"
-        statusDropDown.setCurrentIndex(0)
+       
+        # iterates through the key-value pairs of the different statuses
+        for key, value in ui.TASK_STATUS.items():
+            # adds the value to the status
+            statusDropDown.addItem(value, key)
+        # sets the pointer of the drop down menu to be at the current status
+        statusDropDown.setCurrentIndex(statusDropDown.findData(status))
+
+        # activates the status change function when the drop down is interacted with
+        statusDropDown.activated.connect(lambda: change_status(taskId, statusDropDown.currentData()))
 
         # creates a button for task deletion
         delete_button = buttonObj("X", "iconBtn")
@@ -100,7 +104,7 @@ class ToDoWindow(ui.Page):
 
         tasks = backend.view_items()
         for task in tasks:
-            self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task))
+            self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
 
         self.finish()
 
@@ -190,6 +194,10 @@ class ToDoWindow(ui.Page):
     # takes in the inputs from the add task page and adds a task to the list
     def submit_task(self):
         self.addTask(self.enter_title.text(), self.enter_date.date().toString("yyyy-MM-dd"))
+        self.display_list_page()
+
+    def change_status(self, taskId, newStatus):
+        backend.change_status(taskId, newStatus)
         self.display_list_page()
 
 
