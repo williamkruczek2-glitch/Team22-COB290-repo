@@ -7,6 +7,13 @@ Part 2: keep the same function names and return shapes, but replace each
         mock_data directly, so nothing else has to change.
 
 No Qt in this file, so it can be checked on its own:  python api.py
+
+Forum replies (Dilip & Emma, 21 Oct):
+  - progress and workload use estimated hours, not task counts
+  - workload compares hours with each person's capacity (hoursPerWeek)
+  - personal to-dos (projectId None) never count towards workload
+  - training is information only: no flag or threshold
+  - team leaders see the same pages as managers
 """
 import copy
 from datetime import date as _date, timedelta
@@ -17,9 +24,6 @@ config = {
     'MIN_GROUP': 3,              # R10: never show a figure built from fewer people than this
     'ON_TRACK_GAP': -5,          # progress gap (pts) still counted as on track
     'AT_RISK_GAP': -15,          # gap at or below this = at risk
-    'ASSUMED_ALLOCATION': 0.5,   # share of each member's time on one project (awaiting client answer)
-    'TRAINING_FLAG': 0.40,       # issue rate that triggers "training suggested"
-    'TRAINING_WATCH': 0.25,      # issue rate that triggers "keep an eye on"
 }
 cfg = config
 
@@ -53,6 +57,15 @@ def tasksOf(pid):
     return [t for t in db['tasks'] if t['projectId'] == pid]
 
 
+def projectTasks():
+    """Assigned project tasks only. Personal to-dos (projectId None) are excluded."""
+    return [t for t in db['tasks'] if t['projectId']]
+
+
+def hours(ts):
+    return sum(t['estimateHours'] for t in ts)
+
+
 def workingDaysBetween(a, b):
     n, cur = 0, a
     while cur < b:
@@ -63,15 +76,18 @@ def workingDaysBetween(a, b):
 
 
 # ---------- shared calculation: one project's health ----------
+# Progress is weighted by estimated hours, so a 40h task counts ten times a 4h one.
 def summarise(p):
     ts = tasksOf(p['id'])
     total = len(ts)
     done = len([t for t in ts if t['status'] == 'done'])
-    dueByNow = len([t for t in ts if date(t['dueDate']) <= today])
     overdue = len([t for t in ts if isOverdue(t)])
     blocked = len([t for t in ts if t['status'] == 'blocked'])
-    pct = jsRound((done / total) * 100) if total else 0
-    expected = jsRound((dueByNow / total) * 100) if total else 0   # planned progress by today
+    totalH = hours(ts)
+    doneH = hours([t for t in ts if t['status'] == 'done'])
+    dueH = hours([t for t in ts if date(t['dueDate']) <= today])
+    pct = jsRound((doneH / totalH) * 100) if totalH else 0
+    expected = jsRound((dueH / totalH) * 100) if totalH else 0   # planned progress by today
     gap = pct - expected
     end = date(p['endDate'])
     daysLeft = (end - today).days
@@ -90,6 +106,7 @@ def summarise(p):
         'startDate': p['startDate'], 'endDate': p['endDate'], 'daysLeft': daysLeft,
         'memberCount': len(p['memberIds']),
         'totals': {'total': total, 'done': done, 'open': total - done, 'overdue': overdue, 'blocked': blocked},
+        'hours': {'total': totalH, 'done': doneH, 'open': totalH - doneH},
         'progress': {'actual': pct, 'expected': expected, 'gap': gap},
         'status': status,
     }
@@ -97,9 +114,13 @@ def summarise(p):
 
 # ======================= R02 - Manager's dashboard =======================
 
-# Part 2: SELECT projects WHERE managerId = ?
+# Part 2: SELECT projects WHERE managerId = ?  (team leaders: WHERE teamId = their team)
 def getManagerProjects(managerId):
-    mine = [p for p in db['projects'] if p['managerId'] == managerId]
+    me = emp[managerId]
+    if me['role'] == 'team_leader':
+        mine = [p for p in db['projects'] if p['teamId'] == me['teamId']]
+    else:
+        mine = [p for p in db['projects'] if p['managerId'] == managerId]
     return reply([summarise(p) for p in mine])
 
 
@@ -114,7 +135,7 @@ def getProjectDetail(projectId):
     byStatus = [{'status': s, 'count': len([t for t in ts if t['status'] == s])}
                 for s in ['todo', 'in_progress', 'blocked', 'done']]
 
-    # Burn-up: weekly planned (tasks due) vs actual (tasks done), start -> today
+    # Burn-up: weekly planned (hours due) vs actual (hours done), start -> today
     start = date(p['startDate'])
     stop = date(p['endDate']) if date(p['endDate']) < today else today
     points = []
@@ -140,14 +161,14 @@ def getProjectDetail(projectId):
 def weekPoint(ts, when):
     return {
         'date': when.isoformat(),
-        'planned': len([t for t in ts if date(t['dueDate']) <= when]),
-        'actual': len([t for t in ts if t['completedDate'] and date(t['completedDate']) <= when]),
+        'planned': hours([t for t in ts if date(t['dueDate']) <= when]),
+        'actual': hours([t for t in ts if t['completedDate'] and date(t['completedDate']) <= when]),
     }
 
 
 def taskView(t):
     return {'id': t['id'], 'title': t['title'], 'area': t['area'], 'status': t['status'], 'priority': t['priority'],
-            'dueDate': t['dueDate'], 'assignee': emp[t['assigneeId']]['name'],
+            'dueDate': t['dueDate'], 'hours': t['estimateHours'], 'assignee': emp[t['assigneeId']]['name'],
             'daysOverdue': max(0, (today - date(t['dueDate'])).days)}
 
 
@@ -172,42 +193,52 @@ def getInsights(teamId):
     })
 
 
-# Task allocation: how many people hold 0-2, 3-5, 6-8, 9+ open tasks.
+# Task allocation: open project hours per person, measured in weeks of their
+# own capacity (open hours / hoursPerWeek). Personal to-dos are left out.
 def allocation(people):
     buckets = [
-        {'label': '0–2', 'min': 0, 'max': 2, 'people': 0}, {'label': '3–5', 'min': 3, 'max': 5, 'people': 0},
-        {'label': '6–8', 'min': 6, 'max': 8, 'people': 0}, {'label': '9+', 'min': 9, 'max': float('inf'), 'people': 0},
+        {'label': 'Under 1 week', 'min': 0, 'max': 1, 'people': 0},
+        {'label': '1–2 weeks', 'min': 1, 'max': 2, 'people': 0},
+        {'label': '2–4 weeks', 'min': 2, 'max': 4, 'people': 0},
+        {'label': '4+ weeks', 'min': 4, 'max': float('inf'), 'people': 0},
     ]
-    loads = [len([t for t in db['tasks'] if t['assigneeId'] == e['id'] and isOpen(t)]) for e in people]
-    for n in loads:
+    open_ = [t for t in projectTasks() if isOpen(t)]
+    openH = [hours([t for t in open_ if t['assigneeId'] == e['id']]) for e in people]
+    weeks = [h / e['hoursPerWeek'] for h, e in zip(openH, people)]
+    for w in weeks:
         for b in buckets:
-            if b['min'] <= n <= b['max']:
+            if b['min'] <= w < b['max']:
                 b['people'] += 1
-    if len(loads) < cfg['MIN_GROUP']:
-        return {'suppressed': True, 'headcount': len(loads)}
-    srt = sorted(loads, reverse=True)
+                break
+    if len(people) < cfg['MIN_GROUP']:
+        return {'suppressed': True, 'headcount': len(people)}
+    srt = sorted(openH, reverse=True)
     totalOpen = sum(srt)
-    # Smallest share of people holding half of all open tasks
+    # Smallest share of people holding half of all open hours
     acc, k = 0, 0
     while k < len(srt) and acc < totalOpen / 2:
         acc += srt[k]
         k += 1
-    mean = totalOpen / len(loads)
     return {
-        'suppressed': False, 'headcount': len(loads), 'totalOpen': totalOpen,
-        'average': jsRound(mean * 10) / 10,
-        'halfHeldByPct': jsRound((k / len(loads)) * 100) if totalOpen else 0,
+        'suppressed': False, 'headcount': len(people), 'totalOpenHours': totalOpen,
+        'averageWeeks': jsRound(sum(weeks) / len(weeks) * 10) / 10,
+        'halfHeldByPct': jsRound((k / len(people)) * 100) if totalOpen else 0,
         'buckets': [{'label': b['label'], 'people': b['people']} for b in buckets],
     }
 
 
-# Resourcing: open work (task-days) vs capacity left before the deadline.
+# Resourcing: open hours vs the members' capacity left before the deadline.
+# Each member's weekly hours are split evenly across the active projects they're on.
+def projectsOf(eid):
+    return [p for p in db['projects'] if eid in p['memberIds'] and date(p['endDate']) >= today]
+
+
 def resourcing(p):
     open_ = [t for t in tasksOf(p['id']) if isOpen(t)]
-    demand = sum(t['estimateDays'] for t in open_)
+    demand = hours(open_)
     end = date(p['endDate'])
     daysLeft = workingDaysBetween(today, end) if end > today else 0
-    capacity = len(p['memberIds']) * daysLeft * cfg['ASSUMED_ALLOCATION']
+    capacity = sum(emp[m]['hoursPerWeek'] / 5 * daysLeft / max(1, len(projectsOf(m))) for m in p['memberIds'])
     ratio = jsRound((demand / capacity) * 100) / 100 if capacity else None
     if ratio is None:
         level = 'critical' if demand else 'good'
@@ -215,14 +246,15 @@ def resourcing(p):
         level = 'critical' if ratio > 1 else 'warning' if ratio > 0.8 else 'good'
     blocked = [t for t in open_ if t['status'] == 'blocked']
     return {
-        'id': p['id'], 'name': p['name'], 'demandDays': demand, 'capacityDays': jsRound(capacity),
+        'id': p['id'], 'name': p['name'], 'demandHours': demand, 'capacityHours': jsRound(capacity),
         'workingDaysLeft': daysLeft, 'ratio': ratio, 'level': level,
         'pastDeadline': end < today, 'blocked': len(blocked),
     }
 
 
 # Training needs: per skill area, share of tasks that finished late,
-# were reopened, or are overdue now.
+# were reopened, or are overdue now. Information only - managers decide on
+# training, so there is no threshold or "training suggested" flag.
 def training(ts):
     def finishedLate(t):
         return bool(t['completedDate']) and date(t['completedDate']) > date(t['dueDate'])
@@ -245,7 +277,6 @@ def training(ts):
             'area': area, 'suppressed': False, 'tasks': len(at), 'people': headcount,
             'late': late, 'reopened': reopened, 'overdue': overdue,
             'issueRate': jsRound(rate * 100),
-            'level': 'critical' if rate >= cfg['TRAINING_FLAG'] else 'warning' if rate >= cfg['TRAINING_WATCH'] else 'good',
         })
     rows.sort(key=lambda r: -(r.get('issueRate') or -1))
     return rows

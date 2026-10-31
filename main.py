@@ -76,10 +76,18 @@ def main():
     # LOGIN (R06-R08) goes here: show the login window first, and on success
     # call session.set(user). Until then session.py has a hardcoded user.
 
-    window = MainWindow()
+    # LOGIN (R06/R07): show the login window first; on success store the user and open the app.
+    import login
     import session
-    window.navigate('dashboard' if session.isManager() else 'todo')
-    window.show()
+    window = MainWindow()
+
+    def start(user):
+        session.set(user)
+        window.navigate('dashboard' if session.isManager() else 'todo')
+        window.show()
+
+    gate = login.LoginWindow(on_success=start)
+    gate.show()
     sys.exit(app.exec())
 
 

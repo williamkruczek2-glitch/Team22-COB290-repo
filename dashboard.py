@@ -2,6 +2,8 @@
 dashboard.py - R02: manager's dashboard.   [was js/dashboard.js + dashboard.html]
 Shows every project the signed-in manager is responsible for, how far
 along it is against plan, and what needs attention.
+Progress is weighted by estimated hours; overdue tasks are highlighted
+(forum, Dilip & Emma, 21 Oct). Team leaders see their team's projects.
 """
 from PySide6.QtCore import Qt, QRectF, QPointF
 from PySide6.QtGui import QPainter, QColor, QPen, QFont
@@ -22,8 +24,9 @@ class DashboardPage(ui.Page):
         # --- page header (dashboard.html) ---
         self.greeting = ui.label('Projects you manage', 'h1')
         self.main.addWidget(self.greeting)
-        self.main.addWidget(ui.label("Progress against plan for each project you're responsible for. "
-                                     "The black line on each bar shows where the plan says you should be today.", 'lede'))
+        self.main.addWidget(ui.label("Progress against plan for each project you're responsible for, measured in "
+                                     "estimated hours so bigger tasks count for more. The black line on each bar "
+                                     "shows where the plan says you should be today.", 'lede'))
         self.summaryEl = QFrame()
         self.summaryEl.setObjectName('summary')
         self.summaryLay = QHBoxLayout(self.summaryEl)
@@ -53,7 +56,8 @@ class DashboardPage(ui.Page):
         self.finish()
         # ------------------------------------
 
-        self.greeting.setText('Projects you manage, ' + user['name'].split(' ')[0])
+        self.greeting.setText(("Your team's projects, " if user['role'] == 'team_leader' else 'Projects you manage, ')
+                              + user['name'].split(' ')[0])
 
         if not session.isManager():
             self.summaryEl.hide()
@@ -82,11 +86,13 @@ class DashboardPage(ui.Page):
 
     def renderSummary(self, ps):
         needs = len([p for p in ps if p['status'] in ('at_risk', 'behind')])
+        overdue = sum(p['totals']['overdue'] for p in ps)
         stats = [
             {'n': len(ps), 'label': 'Active projects'},
             {'n': needs, 'label': 'Project needs attention' if needs == 1 else 'Projects need attention',
              'tone': 'critical' if needs else ''},
-            {'n': sum(p['totals']['overdue'] for p in ps), 'label': 'Overdue tasks'},
+            {'n': overdue, 'label': 'Overdue task' if overdue == 1 else 'Overdue tasks',
+             'tone': 'critical' if overdue else ''},
             {'n': sum(p['totals']['blocked'] for p in ps), 'label': 'Blocked tasks'},
         ]
         for s in stats:
@@ -141,11 +147,12 @@ class DashboardPage(ui.Page):
                                f"{ui.fmtDate(p['endDate'])} ({ui.daysLeftText(p['daysLeft'])})", 'project__meta'))
         lay.addSpacing(4)
         bar = Progress(p['progress']['actual'], p['progress']['expected'])
-        bar.setAccessibleName(f"{p['progress']['actual']}% of tasks done; plan says {p['progress']['expected']}% by today")
+        bar.setAccessibleName(f"{p['progress']['actual']}% of estimated hours done; "
+                              f"plan says {p['progress']['expected']}% by today")
         lay.addWidget(bar)
 
         foot = QHBoxLayout()
-        done = ui.label(f"<b>{p['progress']['actual']}%</b> done, {gapText}", 'lede', rich=True)
+        done = ui.label(f"<b>{p['progress']['actual']}%</b> of hours done, {gapText}", 'lede', rich=True)
         done.setWordWrap(False)
         foot.addWidget(done)
         foot.addStretch()
@@ -159,8 +166,10 @@ class DashboardPage(ui.Page):
         return frame
 
     def count(self, n, label, flag=False):
-        colour = f" style='color:{T['critical']}'" if flag else ''
-        return f'<b{colour}>{n}</b> {label}'
+        # Flagged counts get a ▲ as well as red, so they don't rely on colour alone.
+        if flag:
+            return f"<b style='color:{T['critical']}'>▲ {n}</b> {label}"
+        return f'<b>{n}</b> {label}'
 
 
 class Progress(QWidget):
