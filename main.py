@@ -19,6 +19,8 @@ from insights import InsightsPage
 
 from knowledge import KnowledgePage #from r04/r05
 
+from to_do_list_frontend import ToDoWindow
+
 
 class PlaceholderPage(ui.Page):
     """Stand-in for a teammate's page until merge weekend."""
@@ -32,7 +34,7 @@ class PlaceholderPage(ui.Page):
 
 # Page name -> what to build. TEAMMATES: swap your placeholder for your page class.
 PAGES = {
-    'todo':      lambda **_: PlaceholderPage('My to-do list', 'R01'),
+    'todo':      lambda **_: ToDoWindow(),
     'dashboard': lambda **_: DashboardPage(),
     'project':   lambda id='P1', **_: ProjectPage(id),
     'workload':  lambda **_: PlaceholderPage('Team workload', 'R03'),

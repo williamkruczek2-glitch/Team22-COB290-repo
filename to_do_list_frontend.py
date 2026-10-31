@@ -1,3 +1,12 @@
+"""
+This is the frontend file for the To-Do List portion of the project (R01)
+
+During initial testing this used a basic json file setup in order to emulate the database which be introduced in part 2.
+This code was then adapted to run using mock_data.py
+"""
+
+
+
 import PySide6.QtWidgets as PQ
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QFont
@@ -7,6 +16,7 @@ from datetime import date
 import styles
 import ui
 import to_do_list_backend as backend
+import session
 
 
 # extra styling for widgets that aren't included in the others' code 
@@ -109,19 +119,22 @@ class ToDoWindow(ui.Page):
         tasks = backend.view_items()
         for task in tasks:
             if task["status"] == "todo":
-                self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+                if task["assigneeId"] == session.get()["id"]:
+                    self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
 
         self.main.addWidget(ui.label("In Progress", "h2"))
 
         for task in tasks:
             if task["status"] == "in_progress":
-                self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+                if task["assigneeId"] == session.get()["id"]:
+                    self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
 
         self.main.addWidget(ui.label("Done", "h2"))
 
         for task in tasks:
             if task["status"] == "done":
-                self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+                if task["assigneeId"] == session.get()["id"]:
+                    self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
 
 
         self.finish()
@@ -179,30 +192,11 @@ class ToDoWindow(ui.Page):
   
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
+        currentUser = session.get()
+        assigneeId = currentUser["id"]
         # adds the task to the backend
-        backend.add_item(title, dueDate, "1234")
+        backend.add_item(title, dueDate, assigneeId)
         self.display_list_page()
-
-    '''def loadTasks(self):
-        # resets the screen
-        for task in self.taskArr:
-            # removes the task from the list
-            self.task_list_layout.removeWidget(task)
-            # schedules the task object for asynchronous deletion so that the script doesn't crash
-            task.deleteLater()
-        # resets the task array
-        self.taskArr = []
-
-        # loads list of tasks into list
-        tasks = backend.view_items()
-        # iterates through the tasks
-        for task in tasks:
-            # instantiates class object
-            taskObj = TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task)
-            # saves all the task objects incase of deletion
-            self.taskArr.append(taskObj)
-            # adds the task to the window
-            self.task_list_layout.addWidget(taskObj)'''
 
     # deletes a task from the list and reloads the ui
     def delete_task(self, taskId):
@@ -216,74 +210,7 @@ class ToDoWindow(ui.Page):
 
     def change_status(self, taskId, newStatus):
         backend.change_status(taskId, newStatus)
-        self.display_list_page()
-
-
-'''# This is the class which represents the page for adding tasks
-class AddTaskPage(PQ.QWidget):
-    def __init__(self, list_page, submit_task):
-        super().__init__()
-
-        page_heading = PQ.QLabel("Add Task")
-
-        # creates a text box with a label saying what it is
-        title_label = PQ.QLabel("Title")
-        self.enter_title = PQ.QLineEdit()
-
-        # creates a box which inputs date
-        date_label = PQ.QLabel("Due Date")
-        self.enter_date = PQ.QDateEdit()
-        # makes the input process more convinient
-        self.enter_date.setCalendarPopup(True)
-        self.enter_date.setDisplayFormat("dd/MM/yyyy")
-
-        # adds the submit button
-        submit_button = buttonObj("Submit", "primary")
-        submit_button.clicked.connect(submit_task)
-        
-        # adds a way to get back to the main screen
-        cancel_button = buttonObj("Cancel", "primary")
-        cancel_button.clicked.connect(list_page)
-
-        # creates a layout so that the buttons are displayed horizontal
-        button_layout = PQ.QHBoxLayout()
-        button_layout.addWidget(cancel_button)
-        button_layout.addWidget(submit_button)
-
-        # creates a layout for the whole screen
-        layout = PQ.QVBoxLayout(self)
-        # sets the spacing for the layout
-        layout.setSpacing(8)
-        # adds all the widget to the layout
-        layout.addWidget(page_heading)
-        layout.addWidget(title_label)
-        layout.addWidget(self.enter_title)
-        layout.addWidget(date_label)
-        layout.addWidget(self.enter_date)
-        layout.addLayout(button_layout)'''
-
-
-'''# This is the root class which is like a container for the different pages of the app
-class ToDoWindow(PQ.QMainWindow):
-    # initialisation
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("To Do List")
-        # sets window size
-        self.resize(400,500)
-
-        # creates a stacked widget so that you can switch between adding and viewing tasks
-        self.stack = PQ.QStackedWidget()
-        # adds the pages to the stack
-        self.task_list = ListOfTasks(add_page=self.show_add_page)
-        self.add_tasks = AddTaskPage(list_page=self.show_list_page, submit_task=self.submit_task)
-        self.stack.addWidget(self.task_list)
-        self.stack.addWidget(self.add_tasks)
-        self.setCentralWidget(self.stack)'''
-
-    
-
-
+        self.display_list_page() 
 
 # opens window on run
 if __name__ == "__main__":

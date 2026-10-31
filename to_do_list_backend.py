@@ -1,3 +1,14 @@
+"""
+This is the backend file for the To-Do List portion of the project (R01)
+
+During initial testing this used a basic json file setup in order to emulate the database which be introduced in part 2.
+This code was then adapted to run using mock_data.py
+
+"""
+
+
+
+
 from datetime import date
 import uuid # randomised IDs with 2^122 unique combinations
 import json
