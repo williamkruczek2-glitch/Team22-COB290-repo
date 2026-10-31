@@ -129,6 +129,13 @@ class ToDoWindow(ui.Page):
                 if task["assigneeId"] == session.get()["id"]:
                     self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
 
+        self.main.addWidget(ui.label("Blocked", "h2"))
+
+        for task in tasks:
+            if task["status"] == "blocked":
+                if task["assigneeId"] == session.get()["id"]:
+                    self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+
         self.main.addWidget(ui.label("Done", "h2"))
 
         for task in tasks:
