@@ -152,6 +152,7 @@ class ToDoWindow(ui.Page):
         # makes the input process more convinient by only allowing dates
         self.enter_date.setCalendarPopup(True)
         self.enter_date.setDisplayFormat("dd/MM/yyyy")
+        self.enter_date.setMinimumDate(QDate.currentDate())
 
         # adds the submit button
         submit_button = buttonObj("Submit", "primary")
