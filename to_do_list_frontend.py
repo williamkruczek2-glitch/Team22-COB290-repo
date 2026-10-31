@@ -102,9 +102,27 @@ class ToDoWindow(ui.Page):
         header_layout.addWidget(add_task_button)
         self.main.addLayout(header_layout)
 
+        # Creates a subsection for "To Do" tasks
+        self.main.addWidget(ui.label("To Do", "h2"))
+
+
         tasks = backend.view_items()
         for task in tasks:
-            self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+            if task["status"] == "todo":
+                self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+
+        self.main.addWidget(ui.label("In Progress", "h2"))
+
+        for task in tasks:
+            if task["status"] == "in_progress":
+                self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+
+        self.main.addWidget(ui.label("Done", "h2"))
+
+        for task in tasks:
+            if task["status"] == "done":
+                self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], task["status"], self.change_status, self.delete_task))
+
 
         self.finish()
 
