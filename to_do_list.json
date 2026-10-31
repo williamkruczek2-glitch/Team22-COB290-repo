@@ -14,13 +14,6 @@
         "assigneeId": "E01"
     },
     {
-        "projectId": "8d566d56-b8c1-45a0-9492-87221d7d8b4a",
-        "title": "Test",
-        "dueDate": "2026-10-21",
-        "status": "todo",
-        "assigneeId": "E01"
-    },
-    {
         "projectId": "d56d524d-b13a-4017-929d-56100e3cdf09",
         "title": "test",
         "dueDate": "2026-10-31",

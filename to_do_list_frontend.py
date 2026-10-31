@@ -50,6 +50,7 @@ def dueDateText(dueDate):
         return dueDate
     # returns the date and remaining days
     dueDateStr = str(ui.fmtDate(dueDate))+" · "+ str(ui.daysLeftText(days))
+    return dueDateStr
 
 
 # This is a reusable object which represents a task
@@ -62,7 +63,7 @@ def TaskObject(title, dueDate, taskId, status, change_status, delete_task):
         text_layout.setSpacing(2)
         # adds the text to the layout
         text_layout.addWidget(ui.label(title, "h3"))
-        text_layout.addWidget(ui.label(dueDateText(dueDate), "muted"))
+        text_layout.addWidget(ui.label(dueDateText(dueDate), "h3"))
 
         # creates a drop down box to show the status of completion
         statusDropDown = PQ.QComboBox()
