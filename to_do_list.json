@@ -19,12 +19,5 @@
         "dueDate": "2026-10-31",
         "status": "todo",
         "assigneeId": "1234"
-    },
-    {
-        "projectId": "b62e298b-7c4e-4c17-90c5-796c4f39c17a",
-        "title": "new task",
-        "dueDate": "2026-12-25",
-        "status": "todo",
-        "assigneeId": "1234"
     }
 ]

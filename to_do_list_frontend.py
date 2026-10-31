@@ -54,6 +54,15 @@ def TaskObject(title, dueDate, taskId, delete_task):
         text_layout.addWidget(ui.label(title, "h3"))
         text_layout.addWidget(ui.label(dueDateText(dueDate), "muted"))
 
+        # creates a drop down box to show the status of completion
+        statusDropDown = PQ.QComboBox()
+        statusDropDown.addItem("To Do")
+        statusDropDown.addItem("In Progress")
+        statusDropDown.addItem("Blocked")
+        statusDropDown.addItem("Done")
+        # sets the pointer of the drop down menu to start at "To Do"
+        statusDropDown.setCurrentIndex(0)
+
         # creates a button for task deletion
         delete_button = buttonObj("X", "iconBtn")
         delete_button.clicked.connect(lambda: delete_task(taskId))
@@ -61,6 +70,7 @@ def TaskObject(title, dueDate, taskId, delete_task):
         # creates the overall layout of the frame
         layout = PQ.QHBoxLayout()
         layout.addLayout(text_layout)
+        layout.addWidget(statusDropDown)
         layout.addWidget(delete_button)
         task_layout.addLayout(layout)
 
@@ -84,7 +94,7 @@ class ToDoWindow(ui.Page):
         # creates a button so that the user can add tasks
         add_task_button = buttonObj("Add Task", "primary")
         # switches pages
-        add_task_button.clicked.connect(self.display_add_page())
+        add_task_button.clicked.connect(self.display_add_page)
         header_layout.addWidget(add_task_button)
         self.main.addLayout(header_layout)
 
@@ -92,11 +102,12 @@ class ToDoWindow(ui.Page):
         for task in tasks:
             self.main.addWidget(TaskObject(task["title"], task["dueDate"], task["projectId"], self.delete_task))
 
+        self.finish()
 
     def display_add_page(self):
         ui.clear(self.main)
 
-        self.main.addWidget("Add Task", "h1")
+        self.main.addWidget(ui.label("Add Task", "h1"))
         
         # creates a text box for the title
         self.enter_title = PQ.QLineEdit()
@@ -109,11 +120,11 @@ class ToDoWindow(ui.Page):
 
         # adds the submit button
         submit_button = buttonObj("Submit", "primary")
-        submit_button.clicked.connect(submit_task)
+        submit_button.clicked.connect(self.submit_task)
         
         # adds a way to get back to the main screen
         cancel_button = buttonObj("Cancel", "secondary")
-        cancel_button.clicked.connect(self.display_list_page())
+        cancel_button.clicked.connect(self.display_list_page)
 
         # creates a layout so that the buttons are displayed horizontal
         button_layout = PQ.QHBoxLayout()
@@ -141,6 +152,8 @@ class ToDoWindow(ui.Page):
         page_layout.addSpacing(12)
         page_layout.addLayout(button_layout)
         self.main.addWidget(page)
+
+        self.finish()
   
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
