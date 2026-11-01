@@ -17,6 +17,8 @@ from dashboard import DashboardPage
 from project import ProjectPage
 from insights import InsightsPage
 
+from knowledge import KnowledgePage #from r04/r05
+
 
 class PlaceholderPage(ui.Page):
     """Stand-in for a teammate's page until merge weekend."""
@@ -34,7 +36,7 @@ PAGES = {
     'dashboard': lambda **_: DashboardPage(),
     'project':   lambda id='P1', **_: ProjectPage(id),
     'workload':  lambda **_: PlaceholderPage('Team workload', 'R03'),
-    'knowledge': lambda **_: PlaceholderPage('Knowledge base', 'R04/R05'),
+    'knowledge': lambda **_: KnowledgePage(),
     'insights':  lambda **_: InsightsPage(),
 }
 # Which menu item is highlighted for each page (project.py highlights the dashboard).
@@ -74,10 +76,18 @@ def main():
     # LOGIN (R06-R08) goes here: show the login window first, and on success
     # call session.set(user). Until then session.py has a hardcoded user.
 
-    window = MainWindow()
+    # LOGIN (R06/R07): show the login window first; on success store the user and open the app.
+    import login
     import session
-    window.navigate('dashboard' if session.isManager() else 'todo')
-    window.show()
+    window = MainWindow()
+
+    def start(user):
+        session.set(user)
+        window.navigate('dashboard' if session.isManager() else 'todo')
+        window.show()
+
+    gate = login.LoginWindow(on_success=start)
+    gate.show()
     sys.exit(app.exec())
 
 

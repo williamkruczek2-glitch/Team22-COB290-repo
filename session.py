@@ -18,5 +18,9 @@ def set(user):
     _user = user
 
 
+# Managers and team leaders both get the manager pages (forum, Dilip & Emma, 21 Oct).
+MANAGER_ROLES = ('manager', 'team_leader')
+
+
 def isManager():
-    return get()['role'] == 'manager'
+    return get()['role'] in MANAGER_ROLES
