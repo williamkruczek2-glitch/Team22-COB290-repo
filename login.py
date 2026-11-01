@@ -152,6 +152,17 @@ class RegisterView(QWidget):
         self.confirmError = _error(lay)
         show.toggled.connect(self.toggle_show)
 
+        # R10.3: privacy notice, which must be accepted before registering.
+        lay.addSpacing(10)
+        lay.addWidget(ui.label(
+            'Privacy notice: we store your staff email address, your tasks and your posts. '
+            'Your workload is only visible to you and your team manager, and is used to '
+            'share work fairly, not to monitor individuals. You can view your data and '
+            'request corrections at any time.', 'small'))
+        self.privacy = QCheckBox('I have read and accept the privacy notice.')
+        lay.addWidget(self.privacy)
+        self.privacyError = _error(lay)
+        
         lay.addSpacing(10)
         lay.addWidget(_button('Create account', 'primary', self.submit))
         lay.addSpacing(6)
@@ -173,6 +184,10 @@ class RegisterView(QWidget):
             self.checkLay.addWidget(ui.label(('✓ ' if met else '○ ') + text, 'rule ruleMet' if met else 'rule'))
 
     def submit(self):
+        if not self.privacy.isChecked():
+            _show(self.privacyError, 'You must accept the privacy notice to create an account.')
+            return
+        _show(self.privacyError, '')
         errors = auth.registrationErrors(self.email.text(), self.password.text(), self.confirm.text())
         registration = None
         if not any(errors.values()):
