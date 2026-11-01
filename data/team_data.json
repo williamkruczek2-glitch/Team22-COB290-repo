@@ -1,0 +1,28 @@
+{
+  "members": [
+    { "id": 1, "name": "Peter",   "weekly_hours": 37.5 },
+    { "id": 2, "name": "Alex",    "weekly_hours": 37.5 },
+    { "id": 3, "name": "Umar",    "weekly_hours": 37.5 },
+    { "id": 4, "name": "Will",    "weekly_hours": 37.5 },
+    { "id": 5, "name": "Haytham", "weekly_hours": 20 },
+    { "id": 6, "name": "Pravan",  "weekly_hours": 37.5 }
+  ],
+  "tasks": [
+    { "id": 1,  "name": "Set up project repository",       "assigned_id": 1, "status": "done",        "priority": "low",    "due": "2026-10-10", "est_hours": 4,  "difficulty": 2 },
+    { "id": 2,  "name": "Design login screen",             "assigned_id": 1, "status": "in-progress", "priority": "medium", "due": "2026-10-24", "est_hours": 8,  "difficulty": 5 },
+    { "id": 3,  "name": "Write user stories",              "assigned_id": 1, "status": "in-progress", "priority": "high",   "due": "2026-10-19", "est_hours": 6,  "difficulty": 4 },
+    { "id": 4,  "name": "Build insights page",             "assigned_id": 2, "status": "in-progress", "priority": "high",   "due": "2026-10-27", "est_hours": 12, "difficulty": 7 },
+    { "id": 5,  "name": "Review database schema",          "assigned_id": 2, "status": "todo",        "priority": "medium", "due": "2026-11-01", "est_hours": 6,  "difficulty": 5 },
+    { "id": 6,  "name": "Implement task assignment",       "assigned_id": 3, "status": "in-progress", "priority": "high",   "due": "2026-10-23", "est_hours": 10, "difficulty": 8 },
+    { "id": 7,  "name": "Write unit tests for data layer", "assigned_id": 3, "status": "in-progress", "priority": "medium", "due": "2026-10-28", "est_hours": 8,  "difficulty": 5 },
+    { "id": 8,  "name": "Fix filter bug on dashboard",     "assigned_id": 3, "status": "in-progress", "priority": "low",    "due": null,         "est_hours": 6,  "difficulty": 3 },
+    { "id": 9,  "name": "Create workload overview",        "assigned_id": 4, "status": "in-progress", "priority": "high",   "due": "2026-10-18", "est_hours": 12, "difficulty": 6 },
+    { "id": 10, "name": "Add overload warnings",           "assigned_id": 4, "status": "in-progress", "priority": "high",   "due": "2026-10-22", "est_hours": 9,  "difficulty": 7 },
+    { "id": 11, "name": "Member detail dialog",            "assigned_id": 4, "status": "in-progress", "priority": "medium", "due": "2026-10-25", "est_hours": 8,  "difficulty": 6 },
+    { "id": 12, "name": "Style the main window",           "assigned_id": 4, "status": "in-progress", "priority": "low",    "due": "2026-10-30", "est_hours": 6,  "difficulty": 4 },
+    { "id": 13, "name": "Write README",                    "assigned_id": 4, "status": "todo",        "priority": "low",    "due": "2026-11-03", "est_hours": 5,  "difficulty": 2 },
+    { "id": 14, "name": "Prepare demo script",             "assigned_id": 5, "status": "in-progress", "priority": "medium", "due": "2026-11-02", "est_hours": 16, "difficulty": 5 },
+    { "id": 15, "name": "Collect team requirements",       "assigned_id": 5, "status": "done",        "priority": "medium", "due": "2026-10-12", "est_hours": 5,  "difficulty": 3 },
+    { "id": 16, "name": "Research database options",       "assigned_id": 6, "status": "todo",        "priority": "medium", "due": "2026-10-29", "est_hours": 6,  "difficulty": 6 }
+  ]
+}
