@@ -41,11 +41,15 @@ TOPICS = [
 #extra topics so restrictions can be tested
 #payroll portal is members only
 TOPICS.append({"id": "TP7", "name": "Payroll Portal", "restrictAccess": True,
-               "restrictPosting": True, "memberIds": ["E01", "E03", "E06"], "createdBy": "E01"})
+               "restrictPosting": True, "memberIds": ["E01", "E03"], "createdBy": "E01"})
 
 #company announcements can be read by everyone but only members can post
 TOPICS.append({"id": "TP8", "name": "Company Announcements", "restrictAccess": False,
                "restrictPosting": True, "memberIds": ["E01", "E02"], "createdBy": "E01"})
+
+#only members can see e.g. without clara
+TOPICS.append({"id": "TP9", "name": "Salary Reviews", "restrictAccess": True,
+               "restrictPosting": True, "memberIds": ["E01"], "createdBy": "E01"})
 
 #example posts 
 #topicId is which topic a post belongs to
