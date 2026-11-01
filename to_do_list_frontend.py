@@ -185,12 +185,12 @@ class ToDoWindow(ui.Page):
         page.setMaximumWidth(520)
         
         # adds all the widget to the layout
-        page_layout.addWidget(ui.label("Title", "filterlabel"))
+        page_layout.addWidget(ui.label("Title", "filterLabel"))
         page_layout.addWidget(self.enter_title)
         
         # adds a spacing which separates the widgets
         page_layout.addSpacing(8)
-        page_layout.addWidget(ui.label("Due Date", "filterlabel"))
+        page_layout.addWidget(ui.label("Due Date", "filterLabel"))
         page_layout.addWidget(self.enter_date)
 
         # checks if the user is a manager 
@@ -198,7 +198,7 @@ class ToDoWindow(ui.Page):
             # creates a text box to input the name of an employee who will be the assignee of the task
             self.enter_assignee = PQ.QLineEdit()
             page_layout.addSpacing(8)
-            page_layout.addWidget(ui.label("Assignee Name", "filterlabel"))
+            page_layout.addWidget(ui.label("Assignee Name", "filterLabel"))
             page_layout.addWidget(self.enter_assignee)
         
         page_layout.addSpacing(12)
