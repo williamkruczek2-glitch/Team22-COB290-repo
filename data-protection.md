@@ -5,7 +5,7 @@ The system must not be usable to target specific individuals.
 Every page should follow these rules.
 
 ## Rules
-1. Workload is visible only to the person and their team's manager.
+1. Workload (task count, estimated hours and capacity) is visible only to the person and their own team's manager. The client confirmed managers can view individual workloads, but it must be protected against misuse. Capacity is stored as a figure only, never the reason.
 2. Insights shows no names and hides any group under 3 people.
    Filters must not let you remove one person at a time.
 3. Registration shows a privacy notice: what's stored, who sees it, why, and the right to see and correct it.
