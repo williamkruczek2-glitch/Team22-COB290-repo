@@ -16,7 +16,7 @@ import ui
 from dashboard import DashboardPage
 from project import ProjectPage
 from insights import InsightsPage
-
+from w import create_workload_page
 from knowledge import KnowledgePage #from r04/r05
 
 
@@ -35,7 +35,7 @@ PAGES = {
     'todo':      lambda **_: PlaceholderPage('My to-do list', 'R01'),
     'dashboard': lambda **_: DashboardPage(),
     'project':   lambda id='P1', **_: ProjectPage(id),
-    'workload':  lambda **_: PlaceholderPage('Team workload', 'R03'),
+    'workload':  lambda **_: create_workload_page(session.get()),
     'knowledge': lambda **_: KnowledgePage(),
     'insights':  lambda **_: InsightsPage(),
 }
