@@ -70,6 +70,9 @@
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
              </property>
+             <property name="class" stdset="0">
+              <string>stat</string>
+             </property>
              <layout class="QVBoxLayout" name="verticalLayout_3">
               <item>
                <widget class="QLabel" name="employeeValue">
@@ -107,6 +110,9 @@
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
              </property>
+             <property name="class" stdset="0">
+              <string>stat</string>
+             </property>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
                <widget class="QLabel" name="taskValue">
@@ -129,7 +135,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>ActiveTasks</string>
+                 <string>Active Tasks</string>
                 </property>
                </widget>
               </item>
@@ -143,6 +149,9 @@
              </property>
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <property name="class" stdset="0">
+              <string>stat</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
@@ -180,6 +189,9 @@
              </property>
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
+             </property>
+             <property name="class" stdset="0">
+              <string>stat</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>

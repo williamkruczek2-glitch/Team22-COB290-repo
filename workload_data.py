@@ -96,10 +96,21 @@ class  WorkLoadManager :
         self._tasks = []
         self._audit = []
         self.load_data()
-        self._audit_file = Path(data_file).with_name("audit_file.csv")
 
+        self._audit_file = Path(data_file).with_name("audit_file.csv")
+        self.load_audit()
     # FILES 
-    
+    #Ensures the same audit file is used per opening of the app
+    def load_audit(self):
+        if not self._audit_file.exists():
+            return
+        with open(self._audit_file ,"r", newline="") as u:
+            reader = csv.DictReader(u)
+
+            for row in reader:
+                #Appends the audit with unpacked dictionaries of data
+                self._audit.append(AuditEntry(**row))
+
     def load_data(self):
         try:
             with open(self._data_file, encoding = "utf-8") as d:
@@ -123,14 +134,15 @@ class  WorkLoadManager :
         with open(self._data_file, "w", encoding="utf-8") as d:
             json.dump(raw, d, indent=2)
     # LOGS
-    def log(self, user, action, time, target_id=None):
-        target_name = self.get_member(target_id).name
+    def log(self, user, action, target_id):
+        member =self.get_member(target_id)
+
         entry = AuditEntry(
             time = datetime.now().isoformat(timespec="seconds"),
             name = user.name,
             action = action,
-            target_id =target_id,
-            target_name = target_name
+            target_id =str(target_id),
+            target_name = member.name
         )
         #Adds entry to the app list, then appends the csv
         self._audit.append(entry)
@@ -139,6 +151,7 @@ class  WorkLoadManager :
     # RULES 
     def can_view(self, user, member_id):
        return user.role == "MANAGER" or user.member_id == member_id
+    
     def check_can_view(self, user, member_id):
         if not self.can_view(user, member_id):
             raise AccessDenied("You can only view your own workload")
@@ -176,15 +189,8 @@ class  WorkLoadManager :
         return [m for m in self._members if m.id == user.member_id ]
     
     def get_audit_log(self, user):
-        if user.role == MANAGER:
-            entries = self._audit
-        else:
-            entries = []
-            for e in self._audit:
-                if e.target_id == user.member_id:
-                    entries.append(e)
-            # Newest entry first
-        return list(reversed(entries)) 
+        self.require_manager(user)
+        return list(reversed(self._audit)) 
     
         #Logs when a team leader or manager views a profile
 
@@ -237,6 +243,18 @@ class  WorkLoadManager :
     def next_task_id(self):
         return max((t.id for t in self._tasks), default = 0) + 1 
     # WRITING
+    def remove_task(self, user, task_id):
+        self.require_manager(user)
+        task = self.get_task(task_id)
+        self._tasks.remove(task)
+        self._save()
+
+        self.log(
+            user,
+            f"Removed task: {task.name} ID {task.id}",
+            task.assigned_id    
+            
+        )
     def add_task(self, user, name, assigned_id, difficulty, est_hours):
         self.require_manager(user)
         self.get_member(assigned_id)
@@ -250,6 +268,11 @@ class  WorkLoadManager :
         
         self._tasks.append(task)
         self._save()
+        self.log(
+            user,
+            f"Task {task.name} ID {task.id}",
+            task.assigned_id
+        )
         return task
     
     def reassign_task(self, user, member_id, task_id):
@@ -257,19 +280,26 @@ class  WorkLoadManager :
         task = self.get_task(task_id)
         self.get_member(member_id)
         updated_task = Task(
-            id = self.next_task_id(),
-            name = task.name,
-            difficulty = task.difficulty,
-            est_hours= task.est_hours,
-            assigned_id= member_id,
-            status = task.status,
-            due = task.due,
-        )
+            id=task.id,
+            name=task.name,
+            difficulty=task.difficulty,
+            est_hours=task.est_hours,
+            assigned_id=member_id,
+            priority=task.priority,
+            status=task.status,
+            due=task.due
+            )
         self._tasks = [
             updated_task if t.id == task_id else t
             for t in self._tasks
             ]
         self._save()
+        self.log(
+            user,
+            f"Reassigned task {task.name} ID {task.id}"
+            f"from employee {task.assigned_id} to employee {member_id}",
+            member_id
+        )
     # AUDIT (Prevent Misuse)
 
     def write_audit(self, entry):
