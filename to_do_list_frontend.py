@@ -192,6 +192,13 @@ class ToDoWindow(ui.Page):
         page_layout.addSpacing(8)
         page_layout.addWidget(ui.label("Due Date", "filterlabel"))
         page_layout.addWidget(self.enter_date)
+
+        # checks if the user is a manager 
+        if session.get()["role"] == "manager" or session.get()["role"] == "team_leader":
+            self.enter_assignee = PQ.QLineEdit()
+            page_layout.addSpacing(8)
+            page_layout.addWidget(ui.label("Assignee Name", "filterlabel"))
+            page_layout.addWidget(self.enter_assignee)
         
         page_layout.addSpacing(12)
         page_layout.addLayout(button_layout)
@@ -201,6 +208,7 @@ class ToDoWindow(ui.Page):
   
     # adds new tasks to the list of tasks
     def addTask(self, title, dueDate):
+        # retrieves the data of the current user
         currentUser = session.get()
         assigneeId = currentUser["id"]
         # adds the task to the backend
