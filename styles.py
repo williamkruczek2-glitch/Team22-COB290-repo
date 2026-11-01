@@ -91,4 +91,41 @@ QToolTip {{ background: {v['surface']}; color: {v['ink']}; border: 1px solid {v[
 QScrollBar:vertical {{ background: transparent; width: 10px; }}
 QScrollBar::handle:vertical {{ background: {v['rule']}; border-radius: 5px; min-height: 30px; }}
 QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; }}
+
+/* ---------- employee task dialog ---------- */
+
+QDialog#employeeDialog {{
+    background: {v['page']};
+}}
+
+QDialog#employeeDialog QFrame[class="stat"] {{
+    background: {v['surface']};
+    border: 1px solid {v['rule']};
+    border-radius: 6px;
+}}
+
+QDialog#employeeDialog QFrame[class="stat"] QLabel {{
+    background: transparent;
+    border: none;
+}}
+
+QDialog#employeeDialog QTableWidget#taskTable {{
+    background: {v['surface']};
+    border: 1px solid {v['rule']};
+    border-radius: 6px;
+    alternate-background-color: {v['surface-2']};
+    selection-background-color: {v['progress']};
+}}
+
+QDialog#employeeDialog QPushButton#closeButton {{
+    background: {v['surface']};
+    color: {v['ink']};
+    border: 1px solid {v['rule']};
+    border-radius: 6px;
+    padding: 8px 20px;
+}}
+
+QDialog#employeeDialog QPushButton#closeButton:hover {{
+    background: {v['surface-2']};
+}}
 """
