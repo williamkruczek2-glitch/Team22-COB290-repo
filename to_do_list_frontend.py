@@ -195,6 +195,7 @@ class ToDoWindow(ui.Page):
 
         # checks if the user is a manager 
         if session.get()["role"] == "manager" or session.get()["role"] == "team_leader":
+            # creates a text box to input the name of an employee who will be the assignee of the task
             self.enter_assignee = PQ.QLineEdit()
             page_layout.addSpacing(8)
             page_layout.addWidget(ui.label("Assignee Name", "filterlabel"))
@@ -217,12 +218,17 @@ class ToDoWindow(ui.Page):
         
         # if the user is a manager/team leader then the task will be assigned to the person named in the add task window
         else:
+            employeeFound = False
             # iterates through the list of employees until the one with the right name is found
             for employee in employees:
                 if employee["name"] == assigneeName:
+                    employeeFound = True
                     # checks if the manager or team leader managers the team of the current employee
                     if session.get()["teamId"] == employee["teamId"]:
                         assigneeId = employee["id"]
+            if not employeeFound:
+                PQ.QMessageBox.warning(self, "Unknown Input", "The employee you have entered does not exist.")
+                return
         # adds the task to the backend
         backend.add_item(title, dueDate, assigneeId)
         self.display_list_page()
