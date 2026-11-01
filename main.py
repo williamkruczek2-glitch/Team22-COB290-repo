@@ -10,13 +10,13 @@ import sys
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout
-
+import session
 import styles
 import ui
 from dashboard import DashboardPage
 from project import ProjectPage
 from insights import InsightsPage
-
+from w import create_workload_page
 from knowledge import KnowledgePage #from r04/r05
 
 from to_do_list_frontend import ToDoWindow
@@ -37,7 +37,7 @@ PAGES = {
     'todo':      lambda **_: ToDoWindow(),
     'dashboard': lambda **_: DashboardPage(),
     'project':   lambda id='P1', **_: ProjectPage(id),
-    'workload':  lambda **_: PlaceholderPage('Team workload', 'R03'),
+    'workload':  lambda **_: create_workload_page(session.get()),
     'knowledge': lambda **_: KnowledgePage(),
     'insights':  lambda **_: InsightsPage(),
 }
