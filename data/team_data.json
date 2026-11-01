@@ -2,7 +2,7 @@
 {
   "members": [
     {"id": 1, "name": "Dilip Shah", "weekly_hours": 37.5},
-    {"id": 2, "name": "Hannah Reid", "weekly_hours": 22.5},
+    
     {"id": 3, "name": "Bert Hughes", "weekly_hours": 37.5},
     {"id": 4, "name": "Priya Natarajan", "weekly_hours": 37.5},
     {"id": 5, "name": "Tom Okafor", "weekly_hours": 37.5},
