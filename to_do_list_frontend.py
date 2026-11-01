@@ -6,7 +6,6 @@ This code was then adapted to run using mock_data.py
 """
 
 
-
 import PySide6.QtWidgets as PQ
 from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QFont
@@ -17,6 +16,7 @@ import styles
 import ui
 import to_do_list_backend as backend
 import session
+from mock_data import employees
 
 
 # extra styling for widgets that aren't included in the others' code 
@@ -207,10 +207,22 @@ class ToDoWindow(ui.Page):
         self.finish()
   
     # adds new tasks to the list of tasks
-    def addTask(self, title, dueDate):
+    def addTask(self, title, dueDate, assigneeName=None):
         # retrieves the data of the current user
         currentUser = session.get()
-        assigneeId = currentUser["id"]
+        
+        # if the user is not a manager/team leader then the task will be assigned to themself by default
+        if assigneeName is None:
+            assigneeId = currentUser["id"]
+        
+        # if the user is a manager/team leader then the task will be assigned to the person named in the add task window
+        else:
+            # iterates through the list of employees until the one with the right name is found
+            for employee in employees:
+                if employee["name"] == assigneeName:
+                    # checks if the manager or team leader managers the team of the current employee
+                    if session.get()["teamId"] == employee["teamId"]:
+                        assigneeId = employee["id"]
         # adds the task to the backend
         backend.add_item(title, dueDate, assigneeId)
         self.display_list_page()
@@ -222,7 +234,19 @@ class ToDoWindow(ui.Page):
 
     # takes in the inputs from the add task page and adds a task to the list
     def submit_task(self):
-        self.addTask(self.enter_title.text(), self.enter_date.date().toString("yyyy-MM-dd"))
+        
+        # assigns the task to a different employee if the current user is a manager/team leader
+        if session.get()["role"] == "manager" or session.get()["role"] == "team_leader":
+            if self.enter_assignee.text() != "":
+                self.addTask(self.enter_title.text(), self.enter_date.date().toString("yyyy-MM-dd"), self.enter_assignee.text())
+            
+            # if the manager/team leader hasn't inputted an employee then the task will be assigned to themself
+            else:
+                self.addTask(self.enter_title.text(), self.enter_date.date().toString("yyyy-MM-dd"))
+        
+        # task assigned to the user if they aren't a manager or team leader
+        else:
+            self.addTask(self.enter_title.text(), self.enter_date.date().toString("yyyy-MM-dd"))
         self.display_list_page()
 
     def change_status(self, taskId, newStatus):
