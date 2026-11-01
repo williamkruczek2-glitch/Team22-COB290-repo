@@ -2,11 +2,12 @@
 {
   "members": [
     {"id": 1, "name": "Dilip Shah", "weekly_hours": 37.5},
-    {"id": 3, "name": "Clara Novak", "weekly_hours": 37.5},
-    {"id": 4, "name": "Bert Hughes", "weekly_hours": 37.5},
-    {"id": 5, "name": "Priya Natarajan", "weekly_hours": 37.5},
-    {"id": 6, "name": "Tom Okafor", "weekly_hours": 37.5},
-    {"id": 7, "name": "Hannah Reid", "weekly_hours": 22.5}
+    {"id": 2, "name": "Hannah Reid", "weekly_hours": 22.5},
+    {"id": 3, "name": "Bert Hughes", "weekly_hours": 37.5},
+    {"id": 4, "name": "Priya Natarajan", "weekly_hours": 37.5},
+    {"id": 5, "name": "Tom Okafor", "weekly_hours": 37.5},
+    {"id": 6, "name": "Hannah Reid", "weekly_hours": 22.5},
+    {"id": 7, "name": "Clara Novak", "weekly_hours": 37.5}
   ],
   "tasks": [
     {"id": 1, "name": "Develop user authentication", "assigned_id": 3, "status": "in-progress", "priority": "high", "due": "2026-11-10", "est_hours": 8, "difficulty": 7},
