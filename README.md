@@ -20,6 +20,8 @@ Python desktop version, as the client asked for. Same code and features as the w
 | `charts.py` | Draws the charts. |
 | `dashboard.py` etc. | One file per page. |
 | `styles.py` | `css/styles.css` | All the styling and colours. |
+| 'auth.py' | Staff email check and password rules. |
+| 'login.py' | Sign-in and Create account screens, with the live password checklist. |
 
 ## Where the team contributes
 
