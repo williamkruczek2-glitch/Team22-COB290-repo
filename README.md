@@ -46,7 +46,7 @@ Python desktop version, as the client asked for. Same code and features as the w
 - `login.py`: sign-in and Create account screens, with the live password checklist (R06, R07)
 - `main.py`: the LOGIN block that opens the sign-in window and calls session.set(user)
 
-**Haytham & JP (R06–R08, login)**
+**JP (R08, accounts)**
 - Show your login window in `main.py`. There's a comment marking the spot.
 - After a successful login, call:
   `session.set({'id': 'E01', 'name': 'Dilip Shah', 'role': 'manager', 'teamId': 'T1'})`
