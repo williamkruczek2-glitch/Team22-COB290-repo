@@ -61,6 +61,7 @@ Python desktop version, as the client asked for. Same code and features as the w
 - Insights never shows names.
 - Any group under 3 people is hidden. That limit is `MIN_GROUP` in `api.py`.
 - `data-protection.md`: A markdown file that contains the data protection rules that every page must follow.
+- Privacy notice and acceptance tick-box added to registration (`RegisterView` in `login.py`).
 
 ## Part 2 (database)
 Only `api.py` changes: each function will query the database instead of reading `mock_data.py`. The pages stay the same.
