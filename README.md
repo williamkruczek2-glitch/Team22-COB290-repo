@@ -41,9 +41,9 @@ Python desktop version, as the client asked for. Same code and features as the w
 - That lets the training-needs chart link to your topics.
 
 **Haytham (R06, R07, sign-in and registration)**
-- auth.py: staff email check and password rules (R06, R07)
-- login.py: sign-in and Create account screens, with the live password checklist (R06, R07)
-- main.py: the LOGIN block that opens the sign-in window and calls session.set(user)
+- `auth.py`: staff email check and password rules (R06, R07)
+- `login.py`: sign-in and Create account screens, with the live password checklist (R06, R07)
+- `main.py`: the LOGIN block that opens the sign-in window and calls session.set(user)
 
 **Haytham & JP (R06–R08, login)**
 - Show your login window in `main.py`. There's a comment marking the spot.
