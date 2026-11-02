@@ -18,7 +18,7 @@ from styles import T              #current colour theme
 from mock_data import db          #shared fake data (employees, areas, today's date)
 
 
-# --Data-- 
+#data 
 
 #look up employee by id, e.g. EMPLOYEES["E01"]["name"]
 EMPLOYEES = {e["id"]: e for e in db["employees"]}
@@ -57,19 +57,190 @@ TOPICS.append({"id": "TP9", "name": "Salary Reviews", "restrictAccess": True,
 #solved/solution only matters for issue posts
 
 POSTS = [
-    {"id": "PO1", "topicId": "TP3", "authorId": "E14", "createdDate": db["today"],
+    {"id": "P100", "topicId": "TP3", "authorId": "E14", "createdDate": db["today"],
      "kind": "How-to", "solved": False, "solution": "",
      "title": "How to order printing paper",
      "body": "Email procurement with your cost code and the paper size you need."},
-    {"id": "PO2", "topicId": "TP2", "authorId": "E03", "createdDate": db["today"],
+    {"id": "P101", "topicId": "TP2", "authorId": "E03", "createdDate": db["today"],
      "kind": "Issue", "solved": True,
      "solution": "Raise the session timeout in the server config.",
      "title": "Login timeout after 15 minutes",
      "body": "Users are logged out after 15 minutes of inactivity."},
-    {"id": "PO3", "topicId": "TP8", "authorId": "E01", "createdDate": db["today"],
+    {"id": "P102", "topicId": "TP8", "authorId": "E01", "createdDate": db["today"],
      "kind": "General", "solved": False, "solution": "",
      "title": "Welcome to the knowledge base",
      "body": "Share what you know. Anyone can start a new topic."},
+
+
+
+        # ---- Software Development (TP1) ----
+    {"id": "PO1", "topicId": "TP1", "authorId": "E03", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Setting up the local dev environment",
+     "body": "1. Clone the repo and open it in VS Code.\n"
+             "2. Create a virtual environment: python3 -m venv .venv\n"
+             "3. Install the requirements with pip install -r requirements.txt\n"
+             "4. Run main.py and check the app opens.\n\n"
+             "If the Qt window fails to start, reinstall PySide6 first."},
+    {"id": "PO2", "topicId": "TP1", "authorId": "E04", "createdDate": db["today"],
+     "kind": "General", "solved": False, "solution": "",
+     "title": "Code review checklist we agreed on",
+     "body": "Before asking for a review: the app runs, names are clear, and there "
+             "are no leftover debug prints. Reviewers should reply within one working day."},
+    {"id": "PO3", "topicId": "TP1", "authorId": "E06", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Writing a good commit message",
+     "body": "Start with a short summary of what changed, in the present tense. Make "
+             "small, frequent commits so everyone's work shows up in the history."},
+    {"id": "PO4", "topicId": "TP1", "authorId": "E05", "createdDate": db["today"],
+     "kind": "Issue", "solved": True,
+     "solution": "Run the tests from the project root, not from inside the tests folder.",
+     "title": "Unit tests fail with import errors",
+     "body": "The tests pass on one machine but fail on another with module not "
+             "found errors."},
+
+    # ---- Software Issues (TP2) ----
+    {"id": "PO6", "topicId": "TP2", "authorId": "E05", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "CSV export drops the last row",
+     "body": "The helpdesk export is missing the final ticket every time. It looks "
+             "like an off-by-one in the loop."},
+    {"id": "PO7", "topicId": "TP2", "authorId": "E07", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "Email parser fails on attachments with spaces in the name",
+     "body": "Tickets created from emails are skipped when the attachment filename "
+             "contains a space. No error is shown to the sender."},
+    {"id": "PO8", "topicId": "TP2", "authorId": "E04", "createdDate": db["today"],
+     "kind": "Issue", "solved": True,
+     "solution": "Clear the browser cache and reload; the old script was being served.",
+     "title": "Dashboard shows old data after an update",
+     "body": "Some users still see last week's numbers after the new version went out."},
+
+    # ---- Printing (TP3) ----
+    {"id": "PO10", "topicId": "TP3", "authorId": "E08", "createdDate": db["today"],
+     "kind": "Issue", "solved": True,
+     "solution": "Reinstall the driver from the managed print server, not the vendor site.",
+     "title": "New printers show as offline on some laptops",
+     "body": "A few laptops list the new floor printers as offline even though "
+             "they print fine from other machines."},
+    {"id": "PO11", "topicId": "TP3", "authorId": "E09", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Using secure print release",
+     "body": "Send your job as normal, then tap your badge on the printer and pick the "
+             "job from the list. Anything not released is deleted overnight."},
+    {"id": "PO12", "topicId": "TP3", "authorId": "E16", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "Duplex printing defaults to single sided",
+     "body": "Jobs from the admin floor come out single sided even though duplex "
+             "should be the default. It might be a queue setting."},
+
+    # ---- Networking (TP4) ----
+    {"id": "PO13", "topicId": "TP4", "authorId": "E10", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Checking a switch port is on the right VLAN",
+     "body": "1. Log in to the switch.\n"
+             "2. Run the port status command for the port you are checking.\n"
+             "3. Confirm the VLAN matches the floor plan.\n"
+             "4. If not, change it and write the change in the network log."},
+    {"id": "PO14", "topicId": "TP4", "authorId": "E11", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "Slow wifi on the second floor after the switch swap",
+     "body": "Speeds drop in the afternoon. Might be the new access point channel "
+             "overlapping with the one next door."},
+    {"id": "PO15", "topicId": "TP4", "authorId": "E12", "createdDate": db["today"],
+     "kind": "Issue", "solved": True,
+     "solution": "Replace the patch cable; the old one had a damaged connector.",
+     "title": "Desk port keeps dropping the connection",
+     "body": "One desk on the first floor loses its wired connection every few minutes."},
+    {"id": "PO16", "topicId": "TP4", "authorId": "E11", "createdDate": db["today"],
+     "kind": "General", "solved": False, "solution": "",
+     "title": "Switch firmware patching window",
+     "body": "Firmware updates happen on the first Saturday of each month. Anything "
+             "that cannot tolerate a short outage should be flagged the week before."},
+
+    # ---- Hardware (TP5) ----
+    {"id": "PO17", "topicId": "TP5", "authorId": "E09", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Asset-tagging new equipment",
+     "body": "Every new device gets a tag before it leaves the store room. Log the "
+             "tag number, serial number and who it was issued to in the asset sheet."},
+    {"id": "PO18", "topicId": "TP5", "authorId": "E08", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "Docking station not charging some laptops",
+     "body": "It works for most models but not the older ones. Might need a higher "
+             "wattage adapter."},
+    {"id": "PO19", "topicId": "TP5", "authorId": "E12", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Disposing of old equipment",
+     "body": "Wipe the drive, remove the asset tag from the live list and hand the "
+             "device to the store room for collection. Never put it in general waste."},
+
+    # ---- Admin & Procurement (TP6) ----
+    {"id": "PO20", "topicId": "TP6", "authorId": "E15", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Raising a purchase order",
+     "body": "1. Get a quote from the supplier.\n"
+             "2. Fill in the purchase order form with the project code.\n"
+             "3. Send it to your manager for sign-off.\n"
+             "4. Once approved, procurement places the order."},
+    {"id": "PO21", "topicId": "TP6", "authorId": "E16", "createdDate": db["today"],
+     "kind": "General", "solved": False, "solution": "",
+     "title": "New starter checklist is now one page",
+     "body": "The onboarding pack now has a single checklist covering desk, accounts "
+             "and kit. Ask Ruth if you need a copy for a new starter."},
+    {"id": "PO22", "topicId": "TP6", "authorId": "E17", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Booking the training room",
+     "body": "Check the room calendar first, then email the office team with the date, "
+             "time and number of people. Say if you need a projector."},
+
+    # ---- Payroll Portal (TP7, members only: E01, E03, E06) ----
+    {"id": "PO23", "topicId": "TP7", "authorId": "E06", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "Legacy login still reachable by direct link",
+     "body": "The old login page still loads if you go to it directly. It needs to "
+             "be switched off before the upgrade goes live."},
+    {"id": "PO24", "topicId": "TP7", "authorId": "E03", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Testing the new payslip page",
+     "body": "Use the test account, open the payslip page and check the totals match "
+             "the sample data. Report anything that looks off in this topic."},
+
+    # ---- Company Announcements (TP8, only E01 and E02 can post) ----
+    {"id": "PO25", "topicId": "TP8", "authorId": "E01", "createdDate": db["today"],
+     "kind": "General", "solved": False, "solution": "",
+     "title": "Tips for getting the most out of the knowledge base",
+     "body": "You can restrict who sees a topic or who posts in it. Mark issues as "
+             "solved with the fix so the next person can find it."},
+    {"id": "PO26", "topicId": "TP8", "authorId": "E02", "createdDate": db["today"],
+     "kind": "General", "solved": False, "solution": "",
+     "title": "Network maintenance this weekend",
+     "body": "The second floor switches are being replaced on Saturday morning. "
+             "Expect short outages. Please save your work on Friday."},
+
+    # ---- Salary Reviews (TP9, members only: E01, E02, E13) ----
+    {"id": "PO27", "topicId": "TP9", "authorId": "E01", "createdDate": db["today"],
+     "kind": "How-to", "solved": False, "solution": "",
+     "title": "Preparing for a salary review meeting",
+     "body": "1. Collect the team's objectives and how each person met them.\n"
+             "2. Note any extra responsibilities taken on this year.\n"
+             "3. Check the pay band for the role.\n"
+             "4. Book 30 minutes and share the agenda a few days ahead."},
+    {"id": "PO28", "topicId": "TP9", "authorId": "E13", "createdDate": db["today"],
+     "kind": "General", "solved": False, "solution": "",
+     "title": "Review window opens next month",
+     "body": "HR needs all review forms back before the window closes. Managers should "
+             "keep their notes in the shared review folder, not in email."},
+    {"id": "PO29", "topicId": "TP9", "authorId": "E02", "createdDate": db["today"],
+     "kind": "Issue", "solved": False, "solution": "",
+     "title": "Review form will not save on the second page",
+     "body": "The form loses what was typed on page two when you go back. Using the "
+             "browser back button seems to make it worse."},
+    {"id": "PO30", "topicId": "TP9", "authorId": "E13", "createdDate": db["today"],
+     "kind": "Issue", "solved": True,
+     "solution": "Use the Save draft button before moving between pages.",
+     "title": "Draft reviews disappearing",
+     "body": "Two managers lost half-written reviews when their session timed out."},
 ]
 
 
@@ -272,15 +443,15 @@ class KnowledgePage(ui.Page):
         #formatting to keep everything at the top if the window is tall
         self.finish()
 
-    #checks who is logged in
+    #checks who is logged in, more applicable in part 2
 
     @property
     def user_id(self):
-        # looked up each time so it is always the current user
+        #looked up each time so it is always the current user
         return session.get()["id"]
 
     def showEvent(self, event):
-        #Qt calls this every time the page appears on screen.
+        #Qt calls this every time the page appears on screen
         #topic list is rebuilt here in case the logged in user changed
         super().showEvent(event)
         topic = self.current_topic()
@@ -330,7 +501,7 @@ class KnowledgePage(ui.Page):
             "Only chosen people can see this topic?\n(No = everyone can read it.)")
         restrict_access = (answer == QMessageBox.Yes)
 
-        # second question
+        #second question
         if restrict_access:
             restrict_posting = True
         else:
@@ -342,7 +513,7 @@ class KnowledgePage(ui.Page):
 
         """
         For the prototype a restricted topic starts with only its creator as
-        a member. There is no screen to add more members yet.
+        a member. There is no screen to add more members yet. Is currenly hardcoded.
         """
 
         members = []
@@ -415,8 +586,8 @@ class KnowledgePage(ui.Page):
         #mark as solved button is only for unsolved Issue posts and only
         #the author or a manager can use it
         user = session.get()
-        can_solve = (p["kind"] == "Issue" and not p["solved"]
-                     and (p["authorId"] == user["id"] or user["role"] == "manager"))
+        can_solve = (p["kind"] == "Issue" and not p["solved"] and
+                     (p["authorId"] == user["id"] or user["role"] == "manager"))
         self.solve_btn.setVisible(can_solve)
 
     def mark_solved(self):
