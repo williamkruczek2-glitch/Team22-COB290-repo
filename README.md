@@ -23,6 +23,8 @@ Python desktop version, as the client asked for. Same code and features as the w
 | `auth.py` | Staff email check and password rules. |
 | `login.py` | Sign-in and Create account screens, with the live password checklist. |
 | `knowledge.py` | Knowledge base which has topics and posts to share company knowledge. |
+| `data-protection.md` | Contains data protection rules. |
+
 
 ## Where the team contributes
 
@@ -58,6 +60,7 @@ Python desktop version, as the client asked for. Same code and features as the w
 **Deandre (R10, data protection)**
 - Insights never shows names.
 - Any group under 3 people is hidden. That limit is `MIN_GROUP` in `api.py`.
+- `data-protection.md`: A markdown file that contains the data protection rules that every page must follow.
 
 ## Part 2 (database)
 Only `api.py` changes: each function will query the database instead of reading `mock_data.py`. The pages stay the same.
