@@ -38,8 +38,9 @@ Python desktop version, as the client asked for. Same code and features as the w
 - Named workload per person is your page. My pages only show totals.
 
 **Umar (R04/R05, topics and posts)**
-- Use the same topic names as `areas` in `mock_data.py`. 
+- Uses the same topic names as `areas` in `mock_data.py`. 
 - That lets the training-needs chart link to your topics.
+- `knowledge.py`: anyone can create open or restricted topics and posts. (R04, R05)  
 
 **Haytham (R06, R07, sign-in and registration)**
 - `auth.py`: staff email check and password rules (R06, R07)
