@@ -31,11 +31,13 @@ Python desktop version, as the client asked for. Same code and features as the w
 - `insights.py`: task allocation, progress, resourcing, training (R09)
 
 **Alex (R01, to-do lists)**
-- Give your tasks the same fields as `mock_data.py`: `status` (`todo`, `in_progress`, `blocked`, `done`), `dueDate`, `assigneeId`, `projectId`.
-- The dashboard then counts them automatically.
+- Made the code for the backend and frontend of the to-do list
+- The code stores the tasks in a dictionary format in to_do_list.json
 
 **Peter (R03, workload)**
-- Named workload per person is your page. My pages only show totals.
+- Presented workload information (Hours, Tasks, Productivity) into a neat table
+- Managers can reassign tasks to other employees to optimise workflow
+- Frontend made entirely with QtDesigner assisted by the workload_data.py backend
 
 **Umar (R04/R05, topics and posts)**
 - Uses the same topic names as `areas` in `mock_data.py`. 
