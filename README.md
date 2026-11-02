@@ -38,7 +38,7 @@ Python desktop version, as the client asked for. Same code and features as the w
 - Use the same topic names as `areas` in `mock_data.py`.
 - That lets the training-needs chart link to your topics.
 
-**Haytham (R06–R08, login)**
+**Haytham & JP (R06–R08, login)**
 - Show your login window in `main.py`. There's a comment marking the spot.
 - After a successful login, call:
   `session.set({'id': 'E01', 'name': 'Dilip Shah', 'role': 'manager', 'teamId': 'T1'})`
