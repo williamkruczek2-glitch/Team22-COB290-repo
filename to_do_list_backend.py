@@ -23,7 +23,7 @@ to_do_item = {
 }
     
 
-def add_item(title, dueDate, assigneeId):    
+def add_item(title, dueDate, assigneeId):
     # checks if the dueDate is input in a date format
     try:
         # converts dueDate from string to date

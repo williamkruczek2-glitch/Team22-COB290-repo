@@ -313,11 +313,3 @@ class  WorkLoadManager :
                 writer.writeheader()
             #Turns the Audit Entry into a dictionary as one line
             writer.writerow(asdict(entry))
-
-
-
-
-
-
-
-
