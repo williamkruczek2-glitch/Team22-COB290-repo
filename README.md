@@ -60,7 +60,7 @@ Python desktop version, as the client asked for. Same code and features as the w
 **Deandre (R10, data protection)**
 - Insights never shows names.
 - Any group under 3 people is hidden. That limit is `MIN_GROUP` in `api.py`.
-- `data-protection.md`: A markdown file that contains the data protection rules that every page must follow.
+- `data-protection.md`: A markdown file that contains the data protection rules that every page must follow. (R10)
 - Privacy notice and acceptance tick-box added to registration (`RegisterView` in `login.py`).
 
 ## Part 2 (database)
